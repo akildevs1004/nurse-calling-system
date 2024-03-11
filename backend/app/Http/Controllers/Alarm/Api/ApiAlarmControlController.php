@@ -38,6 +38,7 @@ class ApiAlarmControlController extends Controller
             $water_leakage = -1;
             $power_failure = -1;
             $door_status = -1;
+            $file_alarm = -1;
             $log_time = date('Y-m-d H:i:s');
 
             $max_temparature = 30;
