@@ -1,0 +1,91 @@
+[
+  {
+    "text": "S.No",
+    "align": "left",
+    "sortable": true,
+    "value": "sno",
+    "filterable": false,
+    "filterSpecial": false
+  },
+
+  {
+    "text": "Name of Schedule",
+    "align": "left",
+    "sortable": true,
+    "key": "name",
+    "value": "name",
+    "filterable": true,
+    "filterSpecial": false
+  },
+
+  {
+    "text": "Type Schedule",
+    "align": "left",
+    "sortable": true,
+    "key": "shift_type_name",
+    "value": "shift_type.name",
+    "filterable": true,
+    "filterSpecial": false
+  },
+  {
+    "text": "Scheduled Time",
+    "align": "left",
+    "sortable": true,
+    "key": "scheduled_time",
+    "value": "scheduled_time",
+    "filterable": false,
+    "filterSpecial": false
+  },
+  {
+    "text": "From Date",
+    "align": "left",
+    "sortable": true,
+    "key": "from_date",
+    "value": "show_from_date",
+    "filterable": false,
+    "filterSpecial": false
+  },
+  {
+    "text": "To Date",
+    "align": "left",
+    "sortable": true,
+    "key": "to_date",
+    "value": "show_to_date",
+    "filterable": false,
+    "filterSpecial": false
+  },
+  {
+    "text": "Auto Shift",
+    "align": "left",
+    "sortable": true,
+    "key": "isAutoShift",
+    "value": "isAutoShift",
+    "filterable": false,
+    "filterSpecial": false
+  },
+  {
+    "text": "Half Day",
+    "align": "left",
+    "sortable": true,
+    "key": "halfday",
+    "value": "halfday",
+    "filterable": false,
+    "filterSpecial": false
+  },
+  {
+    "text": "Half Day Working Hours",
+    "align": "left",
+    "sortable": true,
+    "key": "halfday_working_hours",
+    "value": "halfday_working_hours",
+    "filterable": false,
+    "filterSpecial": false
+  },
+  {
+    "text": "Actions",
+    "align": "left",
+    "sortable": false,
+    "key": "actions",
+    "value": "actions"
+  }
+]

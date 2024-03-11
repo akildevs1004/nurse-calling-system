@@ -1,0 +1,134 @@
+
+APP_NAME=ideaHrms
+APP_ENV=local
+APP_KEY=base64:lgD8f2bpgkKrCzHrDeyys67U9dZOR6aEv4PMVgCEeSc=
+APP_TOKEN="$2y$10$4.TDCVy6x4xlbVFf5Y4yb.r7o27yUfChGheVbDtfdMQI.CrIbZUwW"
+APP_DEBUG=true
+APP_URL=http://localhost
+APP_LINK=https://staging.ideahrms.com
+BASE_URL=http://localhost:8001
+# BASE_URL=https://stagingbackend.ideahrms.com
+
+LOG_CHANNEL=stack
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+
+
+# local mysql database
+# DB_CONNECTION=mysql
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_DATABASE=hrms
+# DB_USERNAME=root
+# DB_PASSWORD=
+
+
+##local pgsql database
+# DB_CONNECTION=pgsql
+# DB_HOST=127.0.0.1
+# DB_PORT=5432
+# DB_DATABASE=hrms
+# DB_USERNAME=postgres
+# DB_PASSWORD=test123
+
+
+## live  DB server
+# DB_CONNECTION=pgsql
+# DB_HOST=139.59.69.241
+# DB_PORT=5432
+# DB_DATABASE=ideahrms
+# DB_USERNAME=postgres
+# DB_PASSWORD=tZqsls7URjNC0aF
+
+
+
+# staging live database
+DB_CONNECTION=pgsql
+DB_HOST=139.59.69.241
+DB_PORT=5432
+DB_DATABASE=staging_ideahrms
+DB_USERNAME=francis
+DB_PASSWORD=test123
+
+
+# DB_CONNECTION=sqlite
+# DB_DATABASE=C:/akil/ideahrms/backend/database/hrms.sqlite
+# DB_FOREIGN_KEYS=true
+
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+MEMCACHED_HOST=127.0.0.1
+
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+# MAIL_MAILER=smtp
+# MAIL_HOST=mailhog
+# MAIL_PORT=1025
+# MAIL_USERNAME=null
+# MAIL_PASSWORD=null
+# MAIL_ENCRYPTION=null
+# MAIL_FROM_ADDRESS="hello@example.com"
+# MAIL_FROM_NAME="${APP_NAME}"
+
+# MAIL_MAILER=smtp
+# MAIL_HOST=smtp.mailtrap.io
+# MAIL_PORT=2525
+# MAIL_USERNAME=60f4c48348799c
+# MAIL_PASSWORD=47de55c0a73747
+# MAIL_ENCRYPTION=tls
+# MAIL_FROM_ADDRESS="akil@test.com"
+
+
+
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=ac308be9816818
+MAIL_PASSWORD=b40792bd209cc2
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="akil@test.com"
+IS_MAIL=True
+
+ADMIN_MAIL_RECEIVERS='fahathammex90@gmail.com'
+
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=
+AWS_USE_PATH_STYLE_ENDPOINT=false
+
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_APP_CLUSTER=mt1
+
+MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+
+SEEDER_TYPE=fahath
+
+DO_SPACE_KEY=DO00U9QMJCR929VT2R7Z
+DO_SPACE_SECRET=Pi6eA9H9hKnwhk0UFzbTAb+fMRAc2ld9GkPCOIEVevs
+DO_SPACE_REGION=fra1
+DO_SPACE_BUCKET=ideahrmsbucket
+DO_SPACE_ENDPOINT=https://fra1.digitaloceanspaces.com
+DO_URL=https://ideahrmsbucket.fra1.cdn.digitaloceanspaces.com
+BUCKET_URL=https://ideahrmsbucket.fra1.digitaloceanspaces.com
+
+LOCAL_IP=192.168.2.174
+LOCAL_PORT=5000
+
+
+NEXMO_URL=https://messages-sandbox.nexmo.com/v1/messages
+NEXMO_AUTHORIZATION="Basic NmU3MzVjYzA6ZU5UeXd3N1BuMTcyM3RQSg=="
+
+
+APP_TIMEZONE='Asia/Dubai'
+

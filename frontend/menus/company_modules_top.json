@@ -1,0 +1,58 @@
+[
+  {
+    "icon": "mdi-home",
+    "title": "Dashboard",
+    "to": "/dashboard",
+    "menu": "dashboard",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi-clipboard-text-clock",
+    "title": "Employees",
+    "to": "/employees",
+    "menu": "employees",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi-clock-outline",
+    "title": "Attendance",
+    "to": "/shift",
+    "menu": "attendance",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi mdi-calendar-account",
+    "title": "Payroll",
+    "to": "/payroll/salary",
+    "menu": "payroll",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi mdi-calendar-star-four-points",
+    "title": "Access Control",
+    "to": "/timezone",
+    "menu": "access_control",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi-bell",
+    "title": "Visitors",
+    "to": "/visitor/visitor-dashboard",
+    "menu": "visitors",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi-bell",
+    "title": "Community",
+    "to": "/community/dashboard",
+    "menu": "community",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi-bell",
+    "title": "Reports",
+    "to": "/attendance_report",
+    "menu": "reports",
+    "module": "topmenu"
+  }
+]

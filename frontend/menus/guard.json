@@ -1,0 +1,45 @@
+[
+  {
+    "icon": "mdi-home",
+    "title": "Dashboard",
+    "to": "/guard/guard-dashboard",
+    "menu": "dashboard_access",
+    "module": "dashboard",
+    "click": "dashboard"
+  },
+  {
+    "icon": "mdi-comment-alert",
+    "title": "Requests",
+    "to": "/guard/requests",
+    "menu": "visitors_access",
+    "module": "visitors"
+  },
+  {
+    "icon": "mdi-account",
+    "title": "Visitors",
+    "to": "/guard/visitor_list",
+    "menu": "visitors_access",
+    "module": "visitors"
+  },
+  {
+    "icon": "mdi-chart-box-outline",
+    "title": "Visitor Logs",
+    "to": "/guard/visitor_logs",
+    "menu": "visitors_access",
+    "module": "visitors"
+  },
+  {
+    "icon": "mdi-account-tie",
+    "title": "Host",
+    "to": "/guard/host",
+    "menu": "visitors_access",
+    "module": "visitors"
+  },
+  {
+    "icon": "mdi-chart-box-outline",
+    "title": "Reports",
+    "to": "/guard/visitors_report",
+    "menu": "visitors_access",
+    "module": "visitors"
+  }
+]

@@ -1,0 +1,53 @@
+[
+  {
+    "icon": "mdi-home",
+    "title": "Dashboard",
+    "to": "/employees/dashboard2",
+    "menu": "dashboard",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi-clipboard-text-clock",
+    "title": "Profile",
+    "to": "/employees/profile",
+    "menu": "profile_topmenu",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi-clock-outline",
+    "title": "Attendance",
+    "to": "/employees/attendance",
+    "menu": "attendance_topmenu",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi mdi-calendar-account",
+    "title": "Request",
+    "to": "/employees/leaves",
+    "menu": "requests_topmenu",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi mdi-calendar-star-four-points",
+    "title": "Announcments",
+    "to": "/employees/announcements",
+    "menu": "announcements_topmenu",
+    "module": "topmenu"
+  },
+
+  {
+    "icon": "mdi-bell",
+    "title": "Payslips",
+    "to": "/employees/payroll/payslips",
+    "menu": "payslips_topmenu",
+    "module": "topmenu"
+  },
+
+  {
+    "icon": "mdi-bell",
+    "title": "Access control",
+    "to": "/employees/schedule",
+    "menu": "schedule_topmenu",
+    "module": "topmenu"
+  }
+]

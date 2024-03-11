@@ -1,0 +1,277 @@
+[
+  {
+    "icon": "mdi-apps",
+    "title": "Dashboards",
+    "open_menu": false,
+    "menu": "dashboard_access",
+    "hasChildren": [
+      {
+        "icon": "mdi-appss",
+        "title": "Multi Inout",
+        "to": "/dashboard/1",
+        "menu": "dashboard_access"
+      },
+      {
+        "icon": "mdi-appss",
+        "title": "General",
+        "to": "/dashboard/2",
+        "menu": "dashboard_access"
+      },
+      {
+        "icon": "mdi-appss",
+        "title": "Dashbaord 2",
+        "to": "/dashboard2",
+        "menu": "dashboard_access"
+      }
+    ]
+  },
+  {
+    "icon": "mdi-account-tie",
+    "title": "Employees",
+    "to": "/employees",
+    "menu": "employee_access"
+  },
+  {
+    "icon": "mdi-cash-multiple",
+    "title": "Payroll",
+    "open_menu": false,
+    "menu": "payroll_access",
+    "hasChildren": [
+      {
+        "icon": "mdi-cashss",
+        "title": "Salary",
+        "to": "/payroll/salary",
+        "menu": "payroll_access"
+      },
+      {
+        "icon": "mdi mdi-calculatorss",
+        "title": "Payroll Settings",
+        "to": "/payroll/create",
+        "menu": "payroll_settings_access"
+      }
+    ]
+  },
+  {
+    "icon": "mdi-account-tie",
+    "title": "Visitor App",
+    "open_menu": false,
+    "menu": "access",
+    "hasChildren": [
+      {
+        "icon": "mdi-homess",
+        "title": "Dashboard",
+        "to": "/visitor-dashboard",
+        "menu": true
+      },
+      {
+        "icon": "mdi-chart-box-outliness",
+        "title": "Visitors Report",
+        "to": "/visitors_report",
+        "menu": true
+      },
+      {
+        "icon": "mdi-accountss",
+        "title": "Visitors",
+        "to": "/visitor",
+        "menu": true
+      },
+      {
+        "icon": "mdi-account-tiess",
+        "title": "Host",
+        "to": "/host",
+        "menu": true
+      },
+      {
+        "icon": "mdi-bullhornss",
+        "title": "Purpose",
+        "to": "/purpose",
+        "menu": true
+      },
+      {
+        "icon": "mdi-select-groupss",
+        "title": "Zones",
+        "to": "/zone",
+        "menu": true
+      },
+      {
+        "icon": "mdi-chart-box-outliness",
+        "title": "Visitors Logs",
+        "to": "/visitor_logs",
+        "menu": true
+      }
+    ]
+  },
+  {
+    "icon": "mdi-calendar-today",
+    "title": "Access Control",
+    "open_menu": false,
+    "menu": "access",
+    "hasChildren": [
+      {
+        "icon": "mdi mdi-clock-time-four-outliness",
+        "title": "Timezones",
+        "to": "/timezone",
+        "menu": "timezone"
+      },
+      {
+        "icon": "mdi mdi-credit-card-clock-outliness",
+        "title": "TImezone Mapped List",
+        "to": "/timezonemapping/list",
+        "menu": "timezone_mapping_list"
+      },
+      {
+        "icon": "mdi mdi-camera-accountss",
+        "title": "Employee Photo Upload",
+        "to": "/employee_photo_upload",
+        "menu": "employee_photo_upload"
+      }
+    ]
+  },
+  {
+    "icon": "mdi-clipboard-text-clock",
+    "title": "Attendances Logs",
+    "to": "/devicelogs",
+    "menu": "logs_access"
+  },
+  {
+    "icon": "mdi-calendar-today",
+    "title": "Attendances Reports",
+    "to": "/attendance_report",
+    "menu": "attendance_report_access"
+  },
+  {
+    "icon": "mdi-calendar-today",
+    "title": "Attendance Setup",
+    "open_menu": false,
+    "menu": "false",
+    "hasChildren": [
+      {
+        "icon": "mdi-clock-outliness",
+        "title": "Shift & Schedule",
+        "to": "/shift",
+        "menu": "shift_access"
+      },
+      {
+        "icon": "mdi-account-tiess",
+        "title": "Employee Schedule",
+        "to": "/employee_schedule",
+        "menu": "employee_schedule_access"
+      }
+    ]
+  },
+  {
+    "icon": "mdi-email",
+    "title": "Notification",
+    "to": "/report_notifications",
+    "menu": "notifications_access"
+  },
+
+  {
+    "icon": "mdi-cog",
+    "title": "Settings",
+    "open_menu": false,
+    "menu": "company_access",
+    "hasChildren": [
+      {
+        "icon": "mdi-themess",
+        "title": "Card Builder",
+        "to": "/theme",
+        "menu": "notifications_access"
+      },
+      {
+        "icon": "mdi mdi-card-account-detailsss",
+        "title": "Company",
+        "to": "/companies",
+        "menu": "setting_access",
+        "class": "submenutitle"
+      },
+      {
+        "icon": "mdi-lanss",
+        "title": "Branches",
+        "to": "/branches",
+        "menu": "branch_access"
+      },
+      {
+        "icon": "mdi-lanss",
+        "title": "Departments",
+        "to": "/department",
+        "menu": "department_access"
+      },
+      {
+        "icon": "mdi mdi-account-check-outliness",
+        "title": "Roles",
+        "to": "/role",
+        "menu": "role_access"
+      },
+      {
+        "icon": "mdi mdi-account-detailsss",
+        "title": "Assign Permissions",
+        "to": "/assign_permission",
+        "menu": "assign_permission_access"
+      },
+      {
+        "icon": "mdi-cellphone-textss",
+        "title": "Assign Departments",
+        "to": "/department-mapping/",
+        "menu": "assign_permission_access"
+      },
+      {
+        "icon": "mdi-star-box-multiple-outline",
+        "title": "Dep Mapping",
+        "to": "/department-mapping/",
+        "menu": "assign_permission_access",
+        "module": "settings"
+      },
+      {
+        "icon": "mdi-cellphone-textss",
+        "title": "Devices",
+        "to": "/device",
+        "menu": "device_access"
+      }
+    ]
+  },
+  {
+    "icon": "mdi mdi-calendar-star-four-points",
+    "title": "Holidays",
+    "to": "/holidays",
+    "menu": "holiday_access"
+  },
+  {
+    "icon": "mdi-briefcase-outline",
+    "title": "Leaves Management",
+    "open_menu": false,
+    "menu": "leave_access",
+    "hasChildren": [
+      {
+        "icon": "mdi mdi-calendar-accountss",
+        "title": "Leave Applications",
+        "to": "/leaves",
+        "menu": "leave_application_access"
+      },
+      {
+        "icon": "mdi mdi-calendarss",
+        "title": "Leave Types",
+        "to": "/leavetype",
+        "menu": "leave_type_accessss"
+      },
+      {
+        "icon": "mdi mdi-calendar-textss",
+        "title": "Leave Groups",
+        "to": "/leavegroups",
+        "menu": "leave_group_access"
+      }
+    ]
+  },
+  {
+    "icon": "mdi-bell",
+    "title": "Announcements",
+    "open_menu": false,
+    "to": "/announcement"
+  },
+  {
+    "icon": "mdi-web-box",
+    "title": "Web Login Log",
+    "open_menu": false,
+    "to": "/web_login_logs"
+  }
+]

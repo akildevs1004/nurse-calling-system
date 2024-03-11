@@ -1,0 +1,117 @@
+[
+  {
+    "icon": "mdi-view-dashboard",
+    "title": "Dashboard",
+    "to": "/alarm/dashboard",
+    "submenu": "leftmenu",
+    "menu": "branch_access",
+    "module": "dashboard"
+  },
+  {
+    "icon": "mdi-account-tie",
+    "title": "Temperature Reports",
+    "to": "/alarm/temperatureLogs",
+    "menu": "employee_access",
+    "submenu": "leftmenu",
+    "module": "dashboard"
+  },
+  {
+    "icon": "mdi-alarm-light",
+    "title": "Alarm Reports",
+    "to": "/alarm/AlarmLogs",
+    "menu": "employee_schedule_access",
+    "submenu": "leftmenu",
+    "module": "dashboard"
+  },
+  {
+    "icon": "mdi mdi-server",
+    "title": "Server Rooms",
+    "to": "/alarm/rooms",
+    "menu": "payroll_access",
+    "submenu": "leftmenu",
+    "module": "dashboard"
+  },
+
+  {
+    "icon": "mdi-view-dashboard",
+    "title": "Dashboard",
+    "to": "/alarm/dashboard",
+    "menu": "leftmenu",
+    "module": "leftmenu"
+  },
+  {
+    "icon": "mdi-account-tie",
+    "title": "Temperature Reports",
+    "to": "/alarm/temperatureLogs",
+    "menu": "leftmenu",
+    "module": "leftmenu"
+  },
+  {
+    "icon": "mdi-alarm-light",
+    "title": "Alarm Reports",
+    "to": "/alarm/AlarmLogs",
+    "menu": "leftmenu",
+    "module": "leftmenu"
+  },
+  {
+    "icon": "mdi mdi-server",
+    "title": "Server Rooms",
+    "to": "/alarm/rooms",
+    "menu": "leftmenu",
+    "module": "leftmenu"
+  },
+
+  {
+    "icon": "mdi-filmstrip-box-multiple",
+    "title": "Branches",
+    "to": "/branches",
+    "menu": "branch_access",
+    "module": "settings"
+  },
+
+  {
+    "icon": "mdi-email",
+    "title": "Automation",
+    "to": "/automation",
+    "menu": "notifications_access",
+    "module": "settings"
+  },
+  {
+    "icon": "mdi-cellphone-text",
+    "title": "Device Notifications",
+    "to": "/device_notifications",
+    "menu": "notifications_access",
+    "module": "settings"
+  },
+  {
+    "icon": "mdi-domain",
+    "title": "Profile",
+    "to": "/companies",
+    "menu": "setting_access",
+    "class": "submenutitle",
+    "module": "settings"
+  },
+  {
+    "icon": "mdi-cellphone-text",
+    "title": "Devices",
+    "to": "/device",
+    "menu": "device_access",
+    "module": "settings"
+  },
+
+  {
+    "icon": "mdi-web-box",
+    "title": "Web Logs",
+    "open_menu": false,
+    "to": "/web_login_logs",
+    "module": "settings"
+  },
+
+  {
+    "icon": "mdi-mail",
+    "title": "Mail",
+    "open_menu": false,
+    "to": "/automation_mail_content",
+    "module": "settings"
+  }
+]

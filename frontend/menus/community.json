@@ -1,0 +1,59 @@
+[
+  {
+    "text": "Building",
+    "align": "left",
+    "sortable": true,
+    "key": "logo",
+    "value": "logo",
+    "width": "300px",
+    "filterable": true,
+    "filterSpecial": false
+  },
+  {
+    "text": "Management Company",
+    "align": "left",
+    "sortable": true,
+    "key": "management_company",
+    "value": "management_company",
+    "width": "300px",
+    "filterable": true,
+    "filterSpecial": false
+  },
+  
+  {
+    "text": "Expiry",
+    "align": "left",
+    "sortable": true,
+    "key": "expiry",
+    "value": "expiry",
+    "filterable": true,
+    "filterSpecial": false
+  },
+
+  {
+    "text": "Since",
+    "align": "left",
+    "sortable": true,
+    "key": "expiry",
+    "value": "expiry",
+    "filterable": true,
+    "filterSpecial": false
+  },
+
+  {
+    "text": "Location",
+    "align": "left",
+    "sortable": true,
+    "key": "location",
+    "value": "location",
+    "filterable": true,
+    "filterSpecial": true
+  },
+  {
+    "text": "Action",
+    "align": "left",
+    "sortable": false,
+    "key": "options",
+    "value": "options"
+  }
+]

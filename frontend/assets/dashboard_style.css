@@ -1,0 +1,83 @@
+  .image-box {
+    border-radius: 50%;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+    transform: translateY(50%);
+    height: 80px;
+    max-width: 80px !important;
+  }
+  .custom-card .menu {
+    padding: 5px;
+   
+  }
+  .opener {
+    width: 2.5rem;
+    height: 2.5rem;
+    position: relative;
+    border-radius: 50%;
+    transition: background-color 100ms ease-in-out;
+  }
+   .opener:hover {
+    background-color: #f2f2f2;
+  }
+   .opener span {
+    background-color: #404040;
+    width: 0.4rem;
+    height: 0.4rem;
+    position: absolute;
+    top: 0;
+    left: calc(50% - 0.2rem);
+    border-radius: 50%;
+  }
+   .opener span:nth-child(1) {
+    top: 0.45rem;
+  }
+   .opener span:nth-child(2) {
+    top: 1.05rem;
+  }
+   .opener span:nth-child(3) {
+    top: 1.65rem;
+  }
+  
+  .custom-card .title {
+    color: #a0a0a0;
+    font-size: 0.85rem;
+    text-align: center;
+    /* padding: 0 2rem 1.2rem; */
+  }
+  .custom-card .actions {
+    padding: 0 2rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    order: 99;
+  }
+  .custom-card .actions .follow-info {
+    padding: 0 0 1rem;
+    display: flex;
+  }
+  .follow-info h2 {
+    text-align: center;
+  }
+  .custom-card .actions .follow-info h2 a {
+    text-decoration: none;
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.8rem;
+    transition: background-color 100ms ease-in-out;
+  }
+  .custom-card .actions .follow-info h2 a span {
+    color: #1c9eff;
+    font-weight: bold;
+    transform-origin: bottom;
+    transform: scaleY(1.3);
+    transition: color 100ms ease-in-out;
+    font-size: 20px;
+  }
+  .follow-info h2 a small {
+    color: #afafaf;
+    font-size: 0.85rem;
+    font-weight: normal;
+  }
+  .follow-info h2 a:hover {
+    background: #f2f2f2;
+  }

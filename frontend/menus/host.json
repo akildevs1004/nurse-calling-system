@@ -1,0 +1,18 @@
+[
+  {
+    "icon": "mdi-home",
+    "title": "Dashboard",
+    "to": "/employees/dashboard2",
+    "menu": "dashboard_access",
+    "module": "dashboard",
+    "click": "dashboard"
+  },
+  {
+    "icon": "mdi-transit-transfer",
+    "title": "Visitor Requests",
+    "to": "/employees/profile",
+    "menu": "guard/visitor_requests",
+    "module": "dashboard",
+    "click": ""
+  }
+]
