@@ -35,11 +35,23 @@ class DeviceController extends Controller
         $model = Device::query();
         $model->where('company_id', request('company_id'));
         $model->where("device_type", "!=", "Manual");
-        $model->where("device_id", "!=", "Manual");
+
         $model->when(request()->filled('branch_id'), fn ($q) => $q->where('branch_id', request('branch_id')));
         $model->orderBy(request('order_by') ?? "name", request('sort_by_desc') ? "desc" : "asc");
-        return $model->get(["id", "name", "location", "device_id", "device_type", "serial_number"]);
+        return $model->get(["id", "name", "location", "device_type", "serial_number"]);
     }
+    public function DevicesListMonitor()
+    {
+        $model = Device::with(['category']);
+        $model->where('company_id', request('company_id'));
+        $model->where("device_type", "!=", "Manual");
+        $model->when(request()->filled('category_id'), fn ($q) => $q->where('category_id', request('category_id')));
+        $model->when(request()->filled('branch_id'), fn ($q) => $q->where('branch_id', request('branch_id')));
+        $model->orderBy(request('order_by') ?? "name", request('sort_by_desc') ? "desc" : "asc");
+        return $model->get();
+    }
+
+
 
     public function index(Request $request)
     {
@@ -48,7 +60,7 @@ class DeviceController extends Controller
         $model->excludeMobile();
 
         $cols = $request->cols;
-        $model->with(['status', 'company', 'companyBranch']);
+        $model->with(['status', 'category', 'company', 'companyBranch']);
         $model->where('company_id', $request->company_id);
         $model->when($request->filled('name'), function ($q) use ($request) {
             $q->where('name', 'ILIKE', "$request->name%");
@@ -71,7 +83,9 @@ class DeviceController extends Controller
         $model->when($request->filled('branch_id'), function ($q) use ($request) {
             $q->where('branch_id', $request->branch_id);
         });
-
+        $model->when($request->filled('category_id'), function ($q) use ($request) {
+            $q->where('category_id', $request->category_id);
+        });
 
 
         // array_push($cols, 'status.id');
@@ -614,12 +628,9 @@ class DeviceController extends Controller
     public function getAlarmNotification(Request $request)
     {
         //return  $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id)->where("alarm_status", 1)->get();
-        $model = $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id);
+        $model = $devices = Device::with(["branch", "zone", "category"])->where("company_id", $request->company_id);
         return $model->where(function ($query) use ($request) {
-            $query->where("smoke_alarm_status", 1);
-            $query->orWhere("water_alarm_status",  1);
-            $query->orWhere("power_alarm_status",  1);
-            $query->orWhere("door_open_status",  1);
+            $query->where("alarm_status", 1);
         })->get();
     }
     public function openDoorAlways(Request $request)
