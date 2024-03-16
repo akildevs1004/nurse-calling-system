@@ -92,6 +92,7 @@
         </div> -->
 
         <div>
+          {{ device.device_normal_top_color }}
           <v-card
             elevation="2"
             class="rounded-lg"

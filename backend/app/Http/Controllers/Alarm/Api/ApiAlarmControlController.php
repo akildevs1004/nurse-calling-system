@@ -73,7 +73,7 @@ class ApiAlarmControlController extends Controller
             if (isset($alarmData["id"])) {
 
                 $logs = DeviceSensorLogs::where("serial_number", $device['serial_number'])
-                    // ->where("verified", false)
+                    ->where("company_id", '>', 0)
                     //->where("time_gap_seconds", '<', 30)
 
                     ->orderBy("log_time", "DESC")
@@ -112,6 +112,7 @@ class ApiAlarmControlController extends Controller
                             ]);
 
                         DeviceSensorLogs::where("serial_number", $logs['serial_number'])
+                            ->where("company_id", '>', 0)
                             ->where("log_time", '<=', $logs['log_time'])
                             ->where("verified", false)->update(["verified" => true]);
                         $data = [
@@ -134,6 +135,7 @@ class ApiAlarmControlController extends Controller
         foreach ($devicesList as $key => $device) {
 
             $logs = DeviceSensorLogs::where("serial_number", $device['serial_number'])
+                ->where("company_id", '>', 0)
                 ->where("verified", false)
                 ->where("time_gap_seconds", '>=', 30)
                 ->orderBy("log_time", "ASC")
@@ -150,6 +152,7 @@ class ApiAlarmControlController extends Controller
 
                 DevicesAlarmLogs::create($data);
                 DeviceSensorLogs::where("serial_number", $logs['serial_number'])
+                    ->where("company_id", '>', 0)
                     ->where("verified", false)->update(["verified" => true]);
                 $data = [
                     "alarm_status" => 1,
