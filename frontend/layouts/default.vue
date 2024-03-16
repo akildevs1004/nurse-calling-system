@@ -172,7 +172,12 @@
       app
       :style="$nuxt.$route.name == 'index' ? 'z-index: 100000' : ''"
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-app-bar-nav-icon
+        @click.stop="drawer = !drawer"
+        style="color: #fff"
+        class="header-nav-bar-icon"
+      />
+
       <span
         class="text-overflow"
         style="cursor: pointer"
@@ -180,10 +185,38 @@
       >
         <img title="Xtream Guard" :src="logo_src" style="width: 150px" />
       </span>
-
+      <v-row v-if="displayDeviceCategories">
+        <v-col style="">
+          <v-bottom-navigation
+            :value="topMenu"
+            color="primary"
+            style="width: 100%; box-shadow: none; background: transparent"
+            elevation="0"
+          >
+            <v-btn
+              class="device-categories"
+              plain
+              :key="index"
+              @click="ChangeDevice(device.id)"
+              v-for="(device, index) in devicesCategoriesList"
+              style="
+                width: auto;
+                max-width: 100%;
+                height: 30px;
+                margin-top: 14px;
+              "
+              width="auto"
+            >
+              <span style="font-size: 15px; color: #fff">{{
+                device.name
+              }}</span>
+            </v-btn>
+          </v-bottom-navigation>
+        </v-col>
+      </v-row>
       <v-spacer></v-spacer>
 
-      <span style="100%;display: none">
+      <!-- <span style="width: 100%; display: none">
         <template
           v-if="
             getLoginType == 'company' ||
@@ -193,6 +226,8 @@
               $auth.user.role?.role_type.toLowerCase() != 'host')
           "
         >
+
+
           <v-row align="center" justify="space-around" class="">
             <v-col v-for="(items, index) in company_top_menu" :key="index">
               <v-btn
@@ -212,9 +247,28 @@
             </v-col>
           </v-row>
         </template>
-      </span>
+      </span> -->
+      <!-- <v-card
+        elevation="2"
+        class="pa-2 bold"
+        color="#FFF"
+        style="color: #11518d; font-size: 20px"
+      >
+        {{ currentTime }} {{ $dateFormat.format11(currentDate) }}
+      </v-card> -->
 
       <v-spacer></v-spacer>
+      <span style="font-size: 30px; color: #fff">
+        <div>
+          <span style="font-family: cursive; color: #fff; font-size: 30px">
+            {{ currentTime }}</span
+          >
+          <v-divider vertical style="color: #fff"></v-divider>
+          <span style="font-size: 30px; color: #fff">{{
+            $dateFormat.format21(currentDate)
+          }}</span>
+        </div>
+      </span>
 
       <v-menu
         nudge-bottom="50"
@@ -228,7 +282,7 @@
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon color="red" v-bind="attrs" v-on="on">
-            <v-avatar size="35" style="border: 1px solid #6946dd">
+            <v-avatar size="35" style="border: 1px solid #fff">
               <v-img class="company_logo" :src="getLogo"></v-img>
             </v-avatar>
           </v-btn>
@@ -272,7 +326,9 @@
         plan
         @click="gotoHomePage()"
         class="mr-3"
-        ><v-icon class="violet--text" style="text-align: center"
+        ><v-icon
+          class="violet--text"
+          style="text-align: center; color: #fff !important"
           >mdi-view-dashboard</v-icon
         ></v-btn
       >
@@ -282,7 +338,9 @@
         plan
         @click="goToSettings()"
         class="mr-3"
-        ><v-icon class="violet--text" style="text-align: center"
+        ><v-icon
+          class="violet--text"
+          style="text-align: center; color: #fff !important"
           >mdi-settings</v-icon
         ></v-btn
       >
@@ -394,33 +452,25 @@
       <v-dialog
         v-model="alarmNotificationStatus"
         transition="dialog-top-transition"
-        max-width="800"
+        max-width="820"
       >
         <!-- <template v-slot:activator="{ on, attrs }">
           <v-btn color="primary" v-bind="attrs" v-on="on">From the top</v-btn>
         </template> -->
         <template v-slot:default="dialog">
-          <v-card>
-            <!-- <v-card-title dense class="popup_background">
-              <span>Alarm</span>
-              <v-spacer></v-spacer>
-              <v-icon @click="alarmNotificationStatus = false" outlined>
-                mdi mdi-close-circle
-              </v-icon>
-            </v-card-title> -->
-
-            <!-- <div @click="s()" class="toggle-sound"></div> -->
-            <v-toolbar
-              color="error"
+          <v-card style="background-color: #00000066">
+            <!-- <v-toolbar
               style="
                 text-align: center;
                 padding-left: 35%;
-                color: #fff !important;
+                color: black !important;
+                background-color: transparent;
               "
-              >Attention : Alarm Notification
+            >
+                Attention : Alarm Notification  
               <v-spacer></v-spacer>
               <v-icon
-                style="color: #fff !important"
+                style="color: black !important"
                 fill
                 @click="
                   alarmNotificationStatus = false;
@@ -430,160 +480,167 @@
               >
                 mdi mdi-close-circle
               </v-icon>
-            </v-toolbar>
+            </v-toolbar> -->
+
             <v-card-text>
+              <div class="pb-5">
+                <v-spacer></v-spacer>
+                <v-icon
+                  style="
+                    color: black !important;
+                    float: right;
+                    padding-top: 10px;
+                  "
+                  fill
+                  @click="
+                    alarmNotificationStatus = false;
+                    stopsound();
+                  "
+                  outlined
+                >
+                  mdi mdi-close-circle
+                </v-icon>
+              </div>
               <v-row
-                v-for="(device, index) in notificationAlarmDevices"
-                key="index"
+                style="width: 800px"
+                v-for="(device, index1) in notificationAlarmDevices"
+                :key="index1 + 1"
               >
-                <v-col cols="12">
-                  <v-row
-                    v-if="device.smoke_alarm_status"
-                    style="border-bottom: 1px solid #ddd"
+                <v-col
+                  cols="12"
+                  v-if="device.alarm_status"
+                  style="padding-top: 14px"
+                >
+                  <div
+                    style="
+                      height: 50px;
+                      background-color: red;
+                      border-radius: 30px;
+                      text-align: left;
+                      margin: 0 auto;
+                      display: flex;
+                      align-items: left;
+                    "
                   >
-                    <v-col cols="2" class="pt-10 text-center"
-                      ><img
-                        src="../static/alarm-icons/smoke_alarm.png"
-                        width="100px"
-                    /></v-col>
-                    <v-col cols="10" class="pl-4">
+                    <div
+                      style="
+                        background-color: white;
+                        color: black;
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        margin: 4px 5px;
+                      "
+                    >
+                      <div>
+                        <img
+                          :src="getImage(device)"
+                          style="
+                            max-height: 175px;
+                            max-width: 100%;
+                            width: 31px;
+                            text-align: center;
+                            vertical-align: text-top;
+                            display: inline-flex;
+                            margin-left: 2px;
+                            margin-top: 2px;
+                          "
+                        />
+                      </div>
+                    </div>
+                    <div style="width: 40%">
                       <div
-                        class="pa-3 pt-0"
-                        style="font-size: 20px; font-weight: bold"
-                      >
-                        Smoke Alarm Triggered at :
-                        {{
-                          $dateFormat.format5(device.smoke_alarm_start_datetime)
-                        }}
-                      </div>
-                      <div class="bold1 pa-1">
-                        Device Name :{{ device.name }}
-                      </div>
-                      <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch?.branch_name }}
-                      </div>
-                      <div class="bold1 pa-1">
-                        Device Location :{{ device.location }}
-                      </div>
-                    </v-col>
-                  </v-row>
+                        style="
+                          float: left;
+                          /* padding-top: 15px; */
+                          color: rgb(255, 255, 255);
 
-                  <v-row
-                    v-if="device.door_open_status"
-                    style="border-bottom: 1px solid #ddd"
-                  >
-                    <v-col cols="2" class="pt-10 text-center"
-                      ><img
-                        src="../static/alarm-icons/dooropen.png"
-                        width="100px"
-                    /></v-col>
-                    <v-col cols="10" class="pl-4">
-                      <div
-                        class="pa-3 pt-0"
-                        style="font-size: 20px; font-weight: bold"
+                          font-size: 18px;
+                          background-color: rgba(74, 0, 0, 0.74);
+                          height: 26px;
+                          margin-top: 12px;
+                          border-radius: 13px;
+                          margin-left: -4px;
+                          padding-left: 5px;
+                          padding-top: 3px;
+                          border-top-left-radius: 0px;
+                          border-top-right-radius: 13px;
+                          border-bottom-right-radius: 13px;
+                          border-bottom-left-radius: 0px;
+                        "
                       >
-                        Door Keep Open Alarm Triggered at :
-                        {{
-                          $dateFormat.format5(device.door_open_start_datetime)
-                        }}
+                        <div style="color: #fff; padding-right: 8px">
+                          EMERGENCY
+                        </div>
                       </div>
-                      <div class="bold1 pa-1">
-                        Device Name :{{ device.name }}
-                      </div>
-                      <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch?.branch_name }}
-                      </div>
-                      <div class="bold1 pa-1">
-                        Device Location :{{ device.location }}
-                      </div>
-                    </v-col>
-                  </v-row>
+                    </div>
+                    <div
+                      style="
+                        float: left;
+                        padding-top: 4px;
+                        color: #fff;
+                        font-weight: bold;
+                        font-size: 46px;
+                        width: 180px;
+                        text-align: center;
+                        padding-top: 14px;
+                      "
+                    >
+                      {{ device.name }}
+                    </div>
+                    <div
+                      style="
+                        float: left;
+                        padding-left: 20px;
+                        padding-right: 20px;
+                      "
+                    >
+                      <v-divider vertical color="#FFF"></v-divider>
+                    </div>
 
-                  <v-row
-                    v-if="device.power_alarm_status"
-                    style="border-bottom: 1px solid #ddd"
-                  >
-                    <v-col cols="2" class="pt-10 text-center"
-                      ><img
-                        src="../static/alarm-icons/acpower.png"
-                        width="100px"
-                    /></v-col>
-                    <v-col cols="10" class="pl-4">
+                    <div>
+                      <!-- <v-icon color="#FFF" size="30" style="padding-top: 4px"
+              >mdi mdi-exclamation-thick</v-icon
+            > -->
+                    </div>
+                    <div
+                      v-if="device.alarm_start_datetime"
+                      style="
+                        float: left;
+                        padding-top: 0px;
+                        color: rgb(255, 255, 255);
+                        font-weight: bold;
+                        font-size: 30px;
+                        width: 180px;
+                        padding-left: 20px;
+                        text-align: center;
+                      "
+                    >
+                      <div style="float: left; width: 40">
+                        <img
+                          src="../static/icon-esclamation.png"
+                          style="width: 20px; padding-top: 0px"
+                        />
+                      </div>
                       <div
-                        class="pa-3 pt-0"
-                        style="font-size: 20px; font-weight: bold"
+                        style="
+                          padding-top: 15px;
+                          padding-left: 2px;
+                          text-align: right;
+                          width: 150px;
+                        "
                       >
-                        AC Power Off Alarm Triggered at :
                         {{
-                          $dateFormat.format5(device.power_alarm_start_datetime)
+                          getHourMinuteDifference(device.alarm_start_datetime)
                         }}
                       </div>
-                      <div class="bold1 pa-1">
-                        Device Name :{{ device.name }}
-                      </div>
-                      <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch?.branch_name }}
-                      </div>
-                      <div class="bold1 pa-1">
-                        Device Location :{{ device.location }}
-                      </div>
-                    </v-col>
-                  </v-row>
-
-                  <v-row
-                    v-if="device.water_alarm_status"
-                    style="border-bottom: 1px solid #ddd"
-                  >
-                    <v-col cols="2" class="pt-10 text-center"
-                      ><img
-                        src="../static/alarm-icons/water-leakage.png"
-                        width="100px"
-                    /></v-col>
-                    <v-col cols="10" class="pl-4">
-                      <div
-                        class="pa-3 pt-0"
-                        style="font-size: 20px; font-weight: bold"
-                      >
-                        Water Leakage Alarm Triggered at :
-                        {{
-                          $dateFormat.format5(device.water_alarm_start_datetime)
-                        }}
-                      </div>
-                      <div class="bold1 pa-1">
-                        Device Name :{{ device.name }}
-                      </div>
-                      <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch?.branch_name }}
-                      </div>
-                      <div class="bold1 pa-1">
-                        Device Location :{{ device.location }}
-                      </div>
-                    </v-col>
-                  </v-row>
+                    </div>
+                  </div>
                 </v-col>
               </v-row>
-
-              <div>
-                <!-- <div style="color: green">
-                  <strong>Note: </strong>All Branch Level Doors are Opened
-                </div>
-                <br />
-                Check Devices list and Turn off Alarm to Close this popup. -->
-                <!-- Check Devices list
-                <v-spacer></v-spacer>
-                <v-btn
-                  style="float: right"
-                  color="error"
-                  @click="
-                    goToPage('/device');
-                    alarmNotificationStatus = false;
-                  "
-                  >View Devices</v-btn
-                > -->
-              </div>
             </v-card-text>
-            <v-card-actions class="justify-end">
-              <!-- <v-btn text @click="alarmNotificationStatus = false">Close</v-btn> -->
+            <!--  <v-card-actions class="justify-end">
+               <v-btn text @click="alarmNotificationStatus = false">Close</v-btn> 
               <v-btn
                 style="float: right"
                 color="error"
@@ -593,7 +650,7 @@
                 "
                 >View Devices</v-btn
               >
-            </v-card-actions>
+            </v-card-actions>-->
           </v-card>
         </template>
       </v-dialog>
@@ -601,7 +658,13 @@
 
     <v-main
       class="main_bg"
-      :style="miniVariant ? 'padding-left: 60px;' : 'padding-left: 140px;'"
+      :style="
+        miniVariant && drawer
+          ? 'padding-left: 60px;'
+          : !drawer
+          ? 'padding-left: 0px;'
+          : 'padding-left: 140px;'
+      "
     >
       <v-container style="max-width: 100%">
         <nuxt />
@@ -750,6 +813,9 @@ import employee_top_menu from "../menus/employee_modules_top.json";
 export default {
   data() {
     return {
+      displayDeviceCategories: true,
+      topMenu: 0,
+      devicesCategoriesList: [],
       notificationsMenuItems: [
         {
           title: "Leaves Pending (0)",
@@ -831,7 +897,7 @@ export default {
           selected: "",
         },
       },
-
+      currentTime: "",
       topMenu_Selected: "dashboard",
       company_menus,
       employee_menus,
@@ -856,7 +922,7 @@ export default {
 
       clipped: false,
       open_menu: [],
-      drawer: true,
+      drawer: false,
       fixed: false,
       order_count: "",
       logo_src: "",
@@ -869,7 +935,7 @@ export default {
       clipped: true,
 
       miniVariant: true,
-      title: "Xtreme Guards",
+      title: "Nurse Calling System",
       socket: null,
       logout_btn: {
         icon: "mdi-logout",
@@ -883,6 +949,14 @@ export default {
     };
   },
   created() {
+    console.log("this.$route.name", this.$route.name);
+    if (this.$route.name != "monitor-id") this.displayDeviceCategories = false;
+
+    this.drawer =
+      this.$route.name == ("monitor-id" || "nurse-calling-dashboard")
+        ? false
+        : true;
+
     this.updateTopmenu();
 
     this.$store.commit("loginType", this.$auth.user.user_type);
@@ -891,6 +965,12 @@ export default {
     this.setSubLeftMenuItems("dashboard", "/dashboard2", false);
     this.logo_src = require("@/static/logo.png");
     this.pendingNotificationsCount = 0;
+
+    this.loadTopDevicesMenu();
+    setInterval(() => {
+      const now = new Date();
+      this.currentTime = now.toLocaleTimeString([], { hour12: false });
+    }, 1000);
   },
 
   mounted() {
@@ -943,14 +1023,57 @@ export default {
       }
     }
     this.setupInactivityDetection();
+    console.log("this.$route.name", this.$route.name);
+    this.drawer =
+      this.$route.name == ("monitor-id" || "nurse-calling-dashboard")
+        ? false
+        : true;
 
     // setTimeout(() => {
     //   this.$router.push(`/dashboard2`);
     // }, 1000 * 60 * 15); //15 minutes
   },
-  watch: {},
+  watch: {
+    $route(to, from) {
+      if (to.name == "monitor-id")
+        this.setSubLeftMenuItems("dashboard", "/monitor");
+
+      console.log("to.name", to.name);
+      this.displayDeviceCategories = to.name == "monitor-id" ? true : false;
+
+      if (to.name == "monitor-id" || to.name == "nurse-calling-dashboard") {
+        this.drawer = false;
+      } else {
+        this.drawer = true;
+      }
+    },
+  },
   computed: {
+    currentDate() {
+      const months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+
+      const now = new Date();
+      const day = now.getDate();
+      const monthIndex = now.getMonth();
+      const year = now.getFullYear();
+      const formattedDate = `${day} ${months[monthIndex]} ${year}`;
+      return formattedDate;
+    },
     changeColor() {
+      return "#16486f";
       return "#ecf0f4"; //this.$store.state.color;
     },
 
@@ -1001,6 +1124,40 @@ export default {
     },
   },
   methods: {
+    getImage(device) {
+      let imagename = "normal";
+
+      if (device.alarm_status == 1) imagename = "warning";
+      return (
+        process.env.BACKEND_URL2 +
+        "monitor_icons/" +
+        device.category.id +
+        "_" +
+        imagename +
+        ".png"
+      );
+    },
+    ChangeDevice(category_id) {
+      if (category_id == "All") {
+        this.$router.push("/monitor");
+      } else this.$router.push("/monitor/" + category_id);
+    },
+    loadTopDevicesMenu() {
+      this.$axios
+        .get(`devices-categories-list`, {
+          params: {
+            company_id: this.$auth.user.company_id,
+          },
+        })
+        .then(({ data }) => {
+          this.devicesCategoriesList = data;
+
+          this.devicesCategoriesList = [
+            { id: "All", name: `All` },
+            ...this.devicesCategoriesList,
+          ];
+        });
+    },
     palysound() {
       this.audio = new Audio(
         process.env.BACKEND_URL2 + "alarm_sounds/alarm-sound1.mp3"
@@ -1093,7 +1250,10 @@ export default {
     },
     gotoHomePage() {
       //location.href = process.env.APP_URL + "/dashboard2";
-      location.href = "/alarm/dashboard"; // process.env.APP_URL + "/dashboard2";
+      //location.href = "/monitor"; // process.env.APP_URL + "/dashboard2";
+
+      this.setSubLeftMenuItems("dashboard", "/monitor");
+      //this.$router.push("/monitor");
     },
     loadNotificationMenu() {
       let company_id = this.$auth.user?.company?.id || 0;
@@ -1226,7 +1386,25 @@ export default {
         this.menuProperties[menu_name].elevation = 0;
         this.menuProperties[menu_name].selected = bgColor;
       }
+      // if (
+      //   this.$router.name == "monitor-id" ||
+      //   this.$router.name == "nurse-calling-dashboard"
+      // ) {
+      //   this.drawer = false;
+      // } else {
+      //   this.drawer = true;
+      // }
+
       if (redirect) return this.$router.push(page);
+
+      // if (
+      //   this.$router.name == "monitor-id" ||
+      //   this.$router.name == "nurse-calling-dashboard"
+      // ) {
+      //   this.drawer = false;
+      // } else {
+      //   this.drawer = true;
+      // }
     },
 
     setMenus() {
@@ -1366,6 +1544,25 @@ export default {
             };
           }
         });
+    },
+
+    getHourMinuteDifference(date1) {
+      date1 = new Date(date1);
+
+      let date2 = new Date();
+      // Calculate the time difference in milliseconds
+      let timeDifference = Math.abs(date2.getTime() - date1.getTime());
+
+      // Calculate hours and minutes
+      let hours = Math.floor(timeDifference / (1000 * 60 * 60));
+      let minutes = Math.floor(
+        (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+      );
+
+      // Format the result as "hours:minutes"
+      let formattedResult = `${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
+
+      return formattedResult;
     },
     can(per) {
       return this.$pagePermission.can(per, this);
@@ -1901,6 +2098,10 @@ body {
 
 .no-border:before {
   border-color: #fff !important;
+}
+
+.header-nav-bar-icon .mdi-menu {
+  color: #fff !important;
 }
 </style>
 

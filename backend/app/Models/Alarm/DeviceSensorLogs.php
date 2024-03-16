@@ -18,6 +18,6 @@ class DeviceSensorLogs extends Model
 
     public function device()
     {
-        return $this->belongsTo(Device::class, "serial_number", "device_id")->withDefault(["name" => "Manual", "device_id" => "Manual"]);
+        return $this->belongsTo(Device::class, "serial_number", "serial_number")->withDefault(["name" => "Manual", "serial_number" => "Manual"]);
     }
 }

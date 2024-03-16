@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Alarm\DeviceSensorLogs as AlarmDeviceSensorLogs;
 use App\Models\Company;
 use App\Models\Device;
+use App\Models\DevicesCategories;
 use App\Models\DeviceSensorLogs;
 use DateInterval;
 use DatePeriod;
@@ -40,30 +41,19 @@ class DeviceSensorLogsController extends Controller
             $model->where("log_time", '<=', $request->to_date . ' 23:59:59');
         }
         if ($request->filled("filter_alarm_status")) {
-            if ($request->filter_alarm_status == 1) {
-                $model->where(function ($query) use ($request) {
-                    $query->where("water_leakage", 1);
-                    $query->orWhere("power_failure",  1);
-                    $query->orWhere("door_status",  1);
-                    $query->orWhere("smoke_alarm",  1);
-                });
-            } else if ($request->filter_alarm_status == 0) {
-                $model->where(function ($query) use ($request) {
-                    $query->where("water_leakage", 0);
-                    $query->Where("power_failure",  0);
-                    $query->Where("door_status",  0);
-                    $query->Where("smoke_alarm",  0);
-                });
-            } else  if ($request->filter_alarm_status == 2) {
-                $model->where("smoke_alarm", 1);
-            } else  if ($request->filter_alarm_status == 3) {
-                $model->where("water_leakage", 1);
-            } else  if ($request->filter_alarm_status == 4) {
-                $model->where("door_status", 1);
-            } else  if ($request->filter_alarm_status == 5) {
-                $model->where("power_failure", 1);
-            }
+
+            $model->where(function ($query) use ($request) {
+                $query->where("alarm_status", $request->filter_alarm_status);
+            });
         }
+        if ($request->filled("filter_battery")) {
+
+            $model->where(function ($query) use ($request) {
+                $query->where("battery", '>=', $request->filter_battery);
+            });
+        }
+
+
         // { name: `Smoke  Only`, value: `1` },
         // { name: `Water  Only`, value: `2` },
         // { name: `Door  Only`, value: `3` },
@@ -87,14 +77,14 @@ class DeviceSensorLogsController extends Controller
 
         return    $model->paginate($request->per_page);
     }
-    public function getDeviceTodayHourlyTemperature(Request $request)
+    public function getDeviceTodayHourlyAlarmsRequest(Request $request)
     {
 
         $date = date('Y-m-d');
         if ($request->filled("from_date")) {
             $date = $request->from_date;
         }
-        $HouryData = $this->getTemparatureHourlyData($request->company_id, $request->device_serial_number, $date);
+        $HouryData = $this->getDeviceTodayHourlyAlarms($request->company_id, $request->device_serial_number, $date);
 
         return [
 
@@ -300,7 +290,7 @@ class DeviceSensorLogsController extends Controller
 
         return  $finalarray;
     }
-    public function getTemparatureHourlyData($company_id, $device_serial_number, $date)
+    public function getDeviceTodayHourlyAlarms($company_id, $device_serial_number, $date)
     {
         $finalarray = [];
 
@@ -312,22 +302,173 @@ class DeviceSensorLogsController extends Controller
 
             // $date = date('Y-m-d'); //, strtotime(date('Y-m-d') . '-' . $i . ' days'));
             $model = AlarmDeviceSensorLogs::where('company_id', $company_id)
-                ->where("serial_number", $device_serial_number)
-                ->where("temparature", "!=", "NaN")
+
                 ->where('log_time', '>=', $date . ' ' . $j . ':00:00')
                 ->where('log_time', '<=', $date  . ' ' . $j . ':59:59')
-                ->avg("temparature");
+                ->where('alarm_status', 1)->count();
+
+            $modelBattery = AlarmDeviceSensorLogs::where('company_id', $company_id)
+
+
+                ->where('log_time', '>=', $date . ' ' . $j . ':00:00')
+                ->where('log_time', '<=', $date  . ' ' . $j . ':59:59')
+                ->where('battery', '<=', 10)->count();
 
             $finalarray[] = [
                 "date" => $date,
                 "hour" => $i,
-                "count" => $model == null ? 0 : round((int) $model, 2),
+                "count" => $model,
+                "batteryCount" => $modelBattery,
+
+
+
 
             ];
         }
 
 
         return  $finalarray;
+    }
+
+
+
+    public function getDeviceCategoryAlarms(Request $request)
+    {
+
+
+
+        $logs = AlarmDeviceSensorLogs::with(["device.category"])
+            ->where('company_id', $request->company_id)
+            ->where('log_time', '>=', $request->date_from . ' 00:00:00')
+            ->where('log_time', '<=', $request->date_to . ' 23:59:59')
+            ->where('alarm_status', 1)
+            ->get();
+
+        // Group logs by category name
+        $countByCategory = $logs->groupBy('device.category.name')
+            ->map(function ($group) {
+                return $group->count();
+            });
+
+        // Fetch all categories
+        $categories = DevicesCategories::get();
+
+        // Initialize data array
+        $data = [];
+
+        // Loop through categories and populate data array with counts
+        foreach ($categories as $category) {
+            $categoryName = $category->name;
+            $count = $countByCategory->has($categoryName) ? $countByCategory[$categoryName] : 0;
+            $data[] = ["category" => $categoryName, "count" => $count];
+        }
+        usort($data, function ($a, $b) {
+            return $b['count'] - $a['count'];
+        });
+        return  $data;
+    }
+    public function getDeviceAlarmsStatics(Request $request)
+    {
+        $finalarray = [];
+        $dateStrings = [];
+
+
+
+
+        $alarmCount = AlarmDeviceSensorLogs::where('company_id', $request->company_id)
+            ->where('log_time', '>=', $request->date_from . ' 00:00:00')
+            ->where('log_time', '<=', $request->date_to  .  ' 23:59:59')
+            ->where('alarm_status', 1)->count();
+
+        $batteryCount = AlarmDeviceSensorLogs::where('company_id', $request->company_id)
+            ->where('log_time', '>=', $request->date_from . ' 00:00:00')
+            ->where('log_time', '<=', $request->date_to  .  ' 23:59:59')
+            ->where('battery', '<=', 10)->count();
+
+
+        $model = AlarmDeviceSensorLogs::where('company_id', $request->company_id)
+            ->where('log_time', '>=', $request->date_from . ' 00:00:00')
+            ->where('log_time', '<=', $request->date_to  .  ' 23:59:59')
+            ->where('alarm_status', 0)
+            ->where('alarm_status', '!=', null);
+        $avgResponse = $model->clone()
+            ->avg("response_minutes");
+
+        $fastestResponse = $model->clone()
+            ->max("response_minutes");
+        $slowestResponse = $model->clone()
+            ->min("response_minutes");
+
+        $finalarray  = [
+            "totalCount" => $batteryCount + $alarmCount,
+            "alarmCount" => $alarmCount,
+            "batteryCount" => $batteryCount,
+            "avgResponse" => round($avgResponse, 0),
+            "fastestResponse" => $fastestResponse,
+            "slowestResponse" => $slowestResponse,
+
+
+        ];
+
+
+
+        return  $finalarray;
+    }
+    public function getDeviceTodayMonthlyAlarms(Request $request)
+    {
+        $finalarray = [];
+        $dateStrings = [];
+        if ($request->has("date_from") && $request->has("date_to")) {
+            // Usage example:
+            $startDate = new DateTime($request->date_from); // Replace with your start date
+            $endDate = new DateTime($request->date_to);   // Replace with your end date
+
+            $dateStrings = $this->createDateRangeArray($startDate, $endDate);
+        }
+
+        foreach ($dateStrings as $key => $value) {
+
+            $date = $value;
+
+            // $date = date('Y-m-d'); //, strtotime(date('Y-m-d') . '-' . $i . ' days'));
+            $model = AlarmDeviceSensorLogs::where('company_id', $request->company_id)
+
+                ->where('log_time', '>=', $date . ' 00:00:00')
+                ->where('log_time', '<=', $date  .  ' 23:59:59')
+                ->where('alarm_status', 1)->count();
+
+            $modelBattery = AlarmDeviceSensorLogs::where('company_id', $request->company_id)
+
+
+                ->where('log_time', '>=', $date . ' 00:00:00')
+                ->where('log_time', '<=', $date  .  ' 23:59:59')
+                ->where('battery', '<=', 10)->count();
+
+            $finalarray[] = [
+                "date" => $date,
+                "count" => $model,
+                "batteryCount" => $modelBattery,
+
+
+
+
+            ];
+        }
+
+
+        return  $finalarray;
+    }
+    function createDateRangeArray($startDate, $endDate)
+    {
+        $dateStrings = [];
+        $currentDate = $startDate;
+
+        while ($currentDate <= $endDate) {
+            $dateStrings[] = $currentDate->format('Y-m-d'); // Change the format as needed
+            $currentDate->modify('+1 day');
+        }
+
+        return $dateStrings;
     }
     public function UpdateCompanyIds()
     {

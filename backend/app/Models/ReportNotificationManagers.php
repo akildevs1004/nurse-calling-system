@@ -12,4 +12,8 @@ class ReportNotificationManagers extends Model
     protected $guarded = [];
 
     protected $table = 'report_notifications_manager';
+    public function branch()
+    {
+        return $this->belongsTo(CompanyBranch::class, "branch_id", "id");
+    }
 }

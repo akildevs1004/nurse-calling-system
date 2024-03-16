@@ -2,6 +2,14 @@
   {
     "icon": "mdi-view-dashboard",
     "title": "Dashboard",
+    "to": "/monitor",
+    "submenu": "leftmenu",
+    "menu": "branch_access",
+    "module": "dashboard"
+  },
+  {
+    "icon": "mdi-view-dashboard",
+    "title": "Dashboard",
     "to": "/alarm/dashboard",
     "submenu": "leftmenu",
     "menu": "branch_access",

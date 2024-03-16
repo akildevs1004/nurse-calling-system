@@ -126,7 +126,9 @@
                           </div>
                           <h3 class="pb-7 pt-15">
                             Welcome To
-                            <span style="font-size: 20px"> Xtreme Guard </span>
+                            <span style="font-size: 20px">
+                              Nurse Calling System
+                            </span>
                           </h3>
                         </div>
                         <div>

@@ -122,7 +122,7 @@
             </div>
             <h3 class="pb-7 pt-15">
               Welcome To
-              <span style="font-size: 20px"> Xtreme Guard </span>
+              <span style="font-size: 20px">Nurse Calling System </span>
             </h3>
           </div>
           <div>
@@ -211,7 +211,7 @@
               For Technical Support :
               <a
                 target="_blank"
-                href="https://wa.me/971529048025?text=Hello Xtreme Guard. I need your support."
+                href="https://wa.me/971529048025?text=Nurse Calling System. I need your support."
                 ><v-icon color="black">mdi-whatsapp</v-icon></a
               >
               <a

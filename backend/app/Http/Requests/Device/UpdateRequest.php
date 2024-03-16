@@ -28,28 +28,22 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'min:2', 'max:50'],
-            'short_name' => ['required', 'nullable', 'min:3', 'max:4'],
-            'device_id' => ['required', 'min:3', 'max:100'],
+            //'short_name' => ['required', 'nullable', 'min:3', 'max:4'],
+            // 'device_id' => ['required', 'min:3', 'max:100'],
             'location' => ['nullable', 'min:2', 'max:300'],
             'company_id' => ['required', 'min:1', 'integer'],
             'status_id' => ['required', 'min:1', 'integer'],
 
             'model_number' => ['nullable', 'min:4', 'max:50'],
-            'device_type' =>  'required',
 
-            'mode' => ['nullable'],
-
-            'ip' => 'required|ip',
-            'port' => 'required',
-            'function' => 'nullable',
             'utc_time_zone' => 'required',
             'branch_id' => 'required',
             'serial_number' => 'required',
-            'camera_save_images' => 'required',
-            'smoke_enabled' => 'required',
-            'water_enabled' => 'required',
-            'acpower_enabled' => 'required',
-            'door_enabled' => 'required',
+            // 'camera_save_images' => 'required',
+
+            'category_id' => 'required',
+
+
         ];
     }
 }

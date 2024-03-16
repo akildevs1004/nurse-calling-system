@@ -30,6 +30,19 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log as Logger;
 
+
+
+Route::get("/testpath", function (Request $request) {
+
+    return $url = url('storage/app/public/merged.pdf');
+
+    $path = storage_path('app/public/merged.pdf');
+
+
+    return response()->file($path);
+    return Storage::url('app/merged.pdf');;;
+    return   asset('merged.pdf');;
+});
 Route::get('/test/getSensorLogs', function (Request $request) {
 
 

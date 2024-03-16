@@ -20,6 +20,10 @@ class Device extends Model
     {
         return $this->belongsTo(DeviceStatus::class);
     }
+    public function category()
+    {
+        return $this->belongsTo(DevicesCategories::class);
+    }
 
     public function company()
     {

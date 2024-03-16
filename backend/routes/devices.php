@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\DeviceCameraModel2Controller;
 use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\DevicesCategoriesController;
 use App\Http\Controllers\DeviceStatusController;
 use App\Models\Device;
+use App\Models\DevicesCategories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -60,6 +62,24 @@ Route::get('/open_door', [DeviceController::class, 'openDoor']);
 Route::get('/close_door', [DeviceController::class, 'closeDoor']);
 Route::get('/open_door_always', [DeviceController::class, 'openDoorAlways']);
 Route::get('/get_notifications_alarm', [DeviceController::class, 'getAlarmNotification']);
+
+
+
+Route::apiResource('devices-category', DevicesCategoriesController::class);
+Route::delete('/devices-category/{deviceCategory}', [DevicesCategoriesController::class, 'destroy']);
+Route::get('devices-categories-list', [DevicesCategoriesController::class, "DevicesCategoriesList"]);
+Route::get('devices-list-monitor', [DeviceController::class, "DevicesListMonitor"]);
+Route::post('devices-category', [DevicesCategoriesController::class, "update"]);
+Route::post('devices-category-create', [DevicesCategoriesController::class, "create"]);
+
+
+
+
+
+
+
+
+
 
 
 

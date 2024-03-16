@@ -12,6 +12,29 @@ export default ({ app }, inject) => {
       const formattedDate = inputDate.toLocaleDateString("en-US", options);
       return formattedDate;
     },
+    format21: (inputdate) => {
+      // Create a Date object with the date "2023-09-13"  Output Sun, Jan 01, 2023
+      const inputDate = new Date(inputdate);
+      const options = {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+      };
+      const formattedDate = inputDate.toLocaleDateString("en-US", options);
+      return formattedDate;
+    },
+    format11: (inputdate) => {
+      // Create a Date object with the date "2023-09-13"  Output Sun, Jan 01, 2023
+      const inputDate = new Date(inputdate);
+      const options = {
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+        weekday: "long",
+      };
+      const formattedDate = inputDate.toLocaleDateString("en-US", options);
+      return formattedDate;
+    },
     format2: (inputdate) => {
       // Create a Date object with the date "2023-09-13"  Output: "23-09-13"
       const date = new Date(inputdate);
@@ -182,7 +205,21 @@ export default ({ app }, inject) => {
 
       return `${currentMonth} ${currentYear}`;
     },
+    minutesToHHMM(minutes) {
+      var hours = Math.floor(minutes / 60);
+      var remainingMinutes = minutes % 60;
+      return (
+        (hours < 10 ? "0" : "") +
+        hours +
+        ":" +
+        (remainingMinutes < 10 ? "0" : "") +
+        remainingMinutes
+      );
+    },
 
+    padZero(num) {
+      return (num < 10 ? "0" : "") + num;
+    },
     can(per, thisobj) {
       let u = thisobj.$auth.user;
 

@@ -37,7 +37,7 @@ export default {
       return "";
     }
 
-    this.$router.push(`alarm/dashboard`);
+    this.$router.push(`monitor`);
 
     return;
 

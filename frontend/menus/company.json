@@ -1,51 +1,59 @@
 [
   {
-    "icon": "mdi-view-dashboard",
-    "title": "Dashboard",
-    "to": "/alarm/dashboard",
+    "icon": "mdi-monitor-dashboard",
+    "title": "Monitor",
+    "to": "/monitor",
     "submenu": "leftmenu",
     "menu": "branch_access",
     "module": "dashboard"
   },
   {
-    "icon": "mdi-account-tie",
-    "title": "Temperature Reports",
-    "to": "/alarm/temperatureLogs",
-    "menu": "employee_access",
+    "icon": "mdi-view-dashboard",
+    "title": "Dashboard",
+    "to": "/nurse-calling/dashboard",
     "submenu": "leftmenu",
+    "menu": "branch_access",
     "module": "dashboard"
   },
+
   {
     "icon": "mdi-alarm-light",
     "title": "Alarm Reports",
-    "to": "/alarm/AlarmLogs",
+    "to": "/nurse-calling/AlarmLogs",
     "menu": "employee_schedule_access",
     "submenu": "leftmenu",
     "module": "dashboard"
   },
-
+  {
+    "icon": "mdi-monitor-dashboard",
+    "title": "Monitor",
+    "to": "/monitor",
+    "menu": "leftmenu",
+    "module": "leftmenu"
+  },
   {
     "icon": "mdi-view-dashboard",
     "title": "Dashboard",
-    "to": "/alarm/dashboard",
-    "menu": "leftmenu",
-    "module": "leftmenu"
-  },
-  {
-    "icon": "mdi-account-tie",
-    "title": "Temperature Reports",
-    "to": "/alarm/temperatureLogs",
-    "menu": "leftmenu",
-    "module": "leftmenu"
-  },
-  {
-    "icon": "mdi-alarm-light",
-    "title": "Alarm Reports",
-    "to": "/alarm/AlarmLogs",
+    "to": "/nurse-calling/dashboard",
     "menu": "leftmenu",
     "module": "leftmenu"
   },
 
+  {
+    "icon": "mdi-alarm-light",
+    "title": "Alarm Reports",
+    "to": "/nurse-calling/AlarmLogs",
+    "menu": "leftmenu",
+    "module": "leftmenu"
+  },
+  {
+    "icon": "mdi-monitor-dashboard",
+    "title": "Monitor",
+    "to": "/monitor",
+
+    "menu": "branch_access",
+    "module": "settings"
+  },
   {
     "icon": "mdi-filmstrip-box-multiple",
     "title": "Branches",
@@ -55,15 +63,15 @@
   },
   {
     "icon": "mdi-email",
-    "title": "Automation",
+    "title": "Notifications",
     "to": "/automation",
     "menu": "notifications_access",
     "module": "settings"
   },
   {
     "icon": "mdi mdi-server",
-    "title": "Server Rooms",
-    "to": "/alarm/rooms",
+    "title": "Rooms",
+    "to": "/devices",
     "menu": "notifications_access",
     "module": "settings"
   }

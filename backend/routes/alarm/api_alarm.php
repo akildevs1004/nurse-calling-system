@@ -16,7 +16,17 @@ Route::post('alarm_device_status', [ApiAlarmControlController::class, 'LogDevice
 //Route::get('announcement/employee/{id}', [AnnouncementController::class, 'getAnnouncement']);
 
 Route::get('alarm_dashboard_get_temparature_latest', [DeviceSensorLogsController::class, 'getDeviceLatestTemperature']);
-Route::get('alarm_dashboard_get_hourly_data', [DeviceSensorLogsController::class, 'getDeviceTodayHourlyTemperature']);
+Route::get('alarm_dashboard_get_hourly_data', [DeviceSensorLogsController::class, 'getDeviceTodayHourlyAlarmsRequest']);
+Route::get('alarm_dashboard_get_monthly_data', [DeviceSensorLogsController::class, 'getDeviceTodayMonthlyAlarms']);
+Route::get('alarm_dashboard_get_categories_data', [DeviceSensorLogsController::class, 'getDeviceCategoryAlarms']);
+Route::get('alarm_dashboard_get_statistics', [DeviceSensorLogsController::class, 'getDeviceAlarmsStatics']);
+
+
+
+
+
+
+
 Route::get('alarm_dashboard_get_humidity_hourly_data', [DeviceSensorLogsController::class, 'getDeviceTodayHourlyHumidity']);
 Route::get('alarm_device_logs', [DeviceSensorLogsController::class, 'getDeliveLogs']);
 Route::get('delete_alarm_device_logs', [DeviceSensorLogsController::class, 'deleteOneMonthOldLogs']);
