@@ -563,7 +563,7 @@ class DeviceSensorLogsController extends Controller
         });
 
         $model->take(100);
-        $model->with("device:device_id,company_id,location,device_type");
+        $model->with("device");
         $rows = $model->get(["serial_number"]);
 
         if (count($rows) == 0) {
