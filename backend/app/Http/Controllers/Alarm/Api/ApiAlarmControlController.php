@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Models\Community\AttendanceLog;
 use App\Models\Company;
 use App\Models\Device;
+use App\Models\DevicesAlarmLogs;
 use App\Models\DevicesCategories;
 use App\Models\ReportNotification;
 use App\Models\ReportNotificationLogs;
@@ -30,84 +31,184 @@ class ApiAlarmControlController extends Controller
     public function LogDeviceStatus(Request $request)
     {
 
-
-        //   try {
-        Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
-        $insertedId = 0;
-        $temparature = -1;
-        $humidity = -1;
         $alarm_status = -1;
-        $battery = -1;
+        $battery = 100;
+        Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
+
+        $device_serial_number = $request->serialNumber;
+        if ($request->filled("alarm_status")) {
+            $alarm_status = $request->alarm_status;
+        }
+
+        if ($request->filled("battery")) {
+            $battery = $request->battery;
+        }
+
+        $alarm_status = 1; //always 1 
+
+        if ($device_serial_number != '')
+            return   $this->readStatus($device_serial_number, $alarm_status, $battery);
+        else
+            return $this->response('Device Information is not available', null, false);
+    }
+
+    public function updateAlarmResponseTime()
+    {
+        $devicesList = Device::get();
+        $log[] = $this->updateDuration($devicesList);
+        $log[] = $this->updateAlarmStartDatetime($devicesList);
+        $log[] =   $this->updateAlarmEndDatetime($devicesList);
+
+        return $log;
+    }
+    public function updateAlarmEndDatetime($devicesList)
+    {
+
+        foreach ($devicesList as $key => $device) {
+
+            $alarmData =  DevicesAlarmLogs::where("serial_number", $device['serial_number'])
+                ->where("alarm_end_datetime", null)
+                ->first();
+            if (isset($alarmData["id"])) {
+
+                $logs = DeviceSensorLogs::where("serial_number", $device['serial_number'])
+                    // ->where("verified", false)
+                    //->where("time_gap_seconds", '<', 30)
+
+                    ->orderBy("log_time", "DESC")
+                    ->first();
+
+
+                if (isset($logs['log_time'])) {
+
+                    $currentDateTime = date("Y-m-d H:i:s");;
+                    $logTime = $logs['log_time'];
+
+                    $datetime1 = new DateTime($currentDateTime);
+                    $datetime2 = new DateTime($logTime);
+
+                    $interval = $datetime1->diff($datetime2);
+                    $secondsDifference = $interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400);
+                    if ($secondsDifference > 30) {
+
+
+
+
+
+
+                        $datetime1 = new DateTime($logs['log_time']);
+                        $datetime2 = new DateTime($alarmData["alarm_start_datetime"]);
+
+                        $interval = $datetime1->diff($datetime2);
+
+                        $minutesDifference = $interval->i + ($interval->h * 60) + ($interval->days * 1440); // i represents the minutes part of the interval
+
+
+                        DevicesAlarmLogs::where("id",  $alarmData["id"])
+                            ->update([
+                                "alarm_end_datetime" => $logs['log_time'],
+                                "response_minutes" => $minutesDifference
+                            ]);
+
+                        DeviceSensorLogs::where("serial_number", $logs['serial_number'])
+                            ->where("log_time", '<=', $logs['log_time'])
+                            ->where("verified", false)->update(["verified" => true]);
+                        $data = [
+                            "alarm_status" => 0,
+                            "alarm_end_datetime" => $logs['log_time'],
+                        ];
+
+                        Device::where("serial_number", $logs['serial_number'])->update($data);
+                    }
+                }
+            }
+        }
+    }
+    public function updateAlarmStartDatetime($devicesList)
+    {
+
+        $counter = 0;
+        $previousLog = [];
+        $currentLog = [];
+        foreach ($devicesList as $key => $device) {
+
+            $logs = DeviceSensorLogs::where("serial_number", $device['serial_number'])
+                ->where("verified", false)
+                ->where("time_gap_seconds", '>=', 30)
+                ->orderBy("log_time", "ASC")
+                ->first();
+
+
+            if (isset($logs['log_time'])) {
+
+                $data = [
+                    "company_id" => $logs['company_id'],
+                    "serial_number" => $logs['serial_number'],
+                    "alarm_start_datetime" => $logs['log_time'],
+                ];
+
+                DevicesAlarmLogs::create($data);
+                DeviceSensorLogs::where("serial_number", $logs['serial_number'])
+                    ->where("verified", false)->update(["verified" => true]);
+                $data = [
+                    "alarm_status" => 1,
+                    "alarm_start_datetime" => $logs['log_time'],
+                    "alarm_end_datetime" => null
+                ];
+
+                Device::where("serial_number", $logs['serial_number'])->update($data);
+            }
+        }
+    }
+    public function updateDuration($devicesList)
+    {
+
+        foreach ($devicesList as $key => $device) {
+
+
+            $data = DeviceSensorLogs::where("serial_number", $device['serial_number'])
+                ->where("time_gap_seconds", null)
+                ->orderBy("log_time", "asc")
+                ->get();
+
+            for ($i = 0; $i < count($data); $i++) {
+
+                $currentLog = $data[$i];
+                $nextLog = isset($data[$i + 1]) ? $data[$i + 1] : false;
+
+                if ($nextLog) {
+
+                    $latestLogTime = $currentLog['log_time'];
+                    $nextLogTime = $nextLog['log_time'];
+
+                    $datetime1 = new DateTime($nextLogTime);
+                    $datetime2 = new DateTime($latestLogTime);
+
+                    $interval = $datetime1->diff($datetime2);
+                    $secondsDifference = $interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400);
+
+                    //return [$secondsDifference, $latestLogTime, $nextLogTime];
+                    DeviceSensorLogs::where('id', $nextLog['id'])->update(["time_gap_seconds" => $secondsDifference]);
+                }
+            }
+        }
+    }
+    public function readStatus($device_serial_number, $alarm_status, $battery)
+    {
+        //   try {
+        $insertedId = 0;
 
         $log_time = date('Y-m-d H:i:s');
 
-        $max_temparature = 30;
-        $max_humidity = 50;
-
-        try {
-
-            $json = file_get_contents(Storage::path('alarm_rules.json'));
-            $json_data = json_decode($json, true);
-
-            $max_temparature = $json_data['max_temparature'];
-            $max_humidity =  $json_data['max_humidity'];
-        } catch (\Exception $e) {
-        }
-
-        $device_serial_number = $request->serialNumber;
         $PreviousRecord = null;
 
         if ($device_serial_number != '') {
 
 
-            $PreviousRecord = DeviceSensorLogs::where("serial_number", $device_serial_number)
-
-                ->orderBy("log_time", "DESC")
-                ->first();
-
-
-
-
-            if ($request->filled("alarm_status")) {
-                $alarm_status = $request->alarm_status;
-            }
-
-            if ($request->filled("battery")) {
-                $battery = $request->battery;
-            }
-            if ($PreviousRecord) {
-                if ($alarm_status == 0 && $PreviousRecord['alarm_status'] == 1) {
-
-                    $previousLogTime = $PreviousRecord['log_time'];
-                    $Time = date("Y-m-d H:i:s");
-
-                    $datetime1 = new DateTime($Time);
-                    $datetime2 = new DateTime($previousLogTime);
-
-                    $interval = $datetime1->diff($datetime2);
-                    $minutesDifference = $interval->i; // i represents the minutes part of the interval
-
-                    if ($minutesDifference <= 1) {
-                        $alarm_status = 1;
-                    }
-                }
-            }
-
-
-
-
-            if ($temparature == "NaN") {
-                $temparature = 0;
-            }
-            if ($humidity == "NaN") {
-                $humidity = 0;
-            }
-
-
             $logs["serial_number"] = $device_serial_number;
-            $logs["temparature"] = $temparature;
+
             $logs["alarm_status"] = $alarm_status;
-            $logs["humidity"] = $humidity;
+
             $logs["battery"] = $battery; //== 1 ? 0 : 1;
 
 
@@ -125,14 +226,6 @@ class ApiAlarmControlController extends Controller
 
             $row = [];
 
-            if ($temparature >= $max_temparature) {
-                $row["temparature_alarm_status"] = 1;
-                $row["temparature_alarm_start_datetime"] = $log_time;
-            }
-            if ($humidity >= $max_humidity) {
-                $row["humidity_alarm_status"] = 1;
-                $row["humidity_alarm_start_datetime"] = $log_time;
-            }
 
 
             // $row["alarm_status"] = $alarm_status;
@@ -143,16 +236,7 @@ class ApiAlarmControlController extends Controller
 
                 $exist = $deviceModel->clone()->where("battery_level",   0)->exists();
 
-                // $currentDateTime = Carbon::now();
-                // $fiveMinutesAgo = $currentDateTime->copy()->subMinutes(5);
 
-                // return  $logs = DeviceSensorLogs::where("serial_number", $device_serial_number)
-                //     ->whereDate('log_time', '<=', $fiveMinutesAgo->toDateString())
-                //     ->orWhere(function ($query) use ($fiveMinutesAgo) {
-                //         $query->whereDate('log_time', $fiveMinutesAgo->toDateString())
-                //             ->whereTime('log_time', '<=', $fiveMinutesAgo->toTimeString());
-                //     })
-                //     ->get();
 
                 if (!$exist) {
                     $message[] =  $this->SendWhatsappNotification("Batery Level is 0",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
@@ -171,21 +255,24 @@ class ApiAlarmControlController extends Controller
             //alarm_status
             if ($alarm_status == 1) {
 
-                $exist = $deviceModel->clone()->where("battery_level",   1)->exists();
+                $exist = $deviceModel->clone()->where("alarm_status",   1)->exists();
                 if (!$exist) {
-                    $message[] =  $this->SendWhatsappNotification("fire Detection",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+                    $message[] =  $this->SendWhatsappNotification("Alarm Triggered ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
 
 
 
                     $row = [];
                     $row["alarm_status"] = $alarm_status;
                     $row["alarm_start_datetime"] = $log_time;
+                    $row["alarm_end_datetime"] = null;
                     $deviceModel->clone()->update($row);
                 }
             } else if ($alarm_status == 0) {
 
                 $exist = $deviceModel->clone()->where("alarm_status",   0)->exists();
                 if (!$exist) {
+
+                    $message[] =  $this->SendWhatsappNotification("Alarm Stopped ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
                     $row = [];
                     $row["alarm_status"] = $alarm_status;
                     $row["alarm_end_datetime"] = $log_time;
@@ -193,23 +280,23 @@ class ApiAlarmControlController extends Controller
                     $deviceModel->clone()->where("alarm_status", 1)->update($row);
                 }
 
-                //avg response 
+                // //avg response 
 
-                if ($PreviousRecord) {
-                    if ($PreviousRecord['alarm_status'] == 1) {
+                // if ($PreviousRecord) {
+                //     if ($PreviousRecord['alarm_status'] == 1) {
 
-                        $previousLogTime = $PreviousRecord['log_time'];
-                        $Time = date("Y-m-d H:i:s");
+                //         $previousLogTime = $PreviousRecord['log_time'];
+                //         $Time = date("Y-m-d H:i:s");
 
-                        $datetime1 = new DateTime($Time);
-                        $datetime2 = new DateTime($previousLogTime);
+                //         $datetime1 = new DateTime($Time);
+                //         $datetime2 = new DateTime($previousLogTime);
 
-                        $interval = $datetime1->diff($datetime2);
-                        $minutesDifference = $interval->i; // i represents the minutes part of the interval
+                //         $interval = $datetime1->diff($datetime2);
+                //         $minutesDifference = $interval->i; // i represents the minutes part of the interval
 
-                        DeviceSensorLogs::where("id", $insertedId->id)->update(["response_minutes" => $minutesDifference]);
-                    }
-                }
+                //         DeviceSensorLogs::where("id", $insertedId->id)->update(["response_minutes" => $minutesDifference]);
+                //     }
+                // }
 
 
 
@@ -235,6 +322,214 @@ class ApiAlarmControlController extends Controller
 
         return $this->response('Data error', null, false);
     }
+    // public function LogDeviceStatus(Request $request)
+    // {
+
+
+    //     //   try {
+    //     Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
+    //     $insertedId = 0;
+    //     $temparature = -1;
+    //     $humidity = -1;
+    //     $alarm_status = -1;
+    //     $battery = 100;
+
+    //     $log_time = date('Y-m-d H:i:s');
+
+    //     $max_temparature = 30;
+    //     $max_humidity = 50;
+
+    //     try {
+
+    //         $json = file_get_contents(Storage::path('alarm_rules.json'));
+    //         $json_data = json_decode($json, true);
+
+    //         $max_temparature = $json_data['max_temparature'];
+    //         $max_humidity =  $json_data['max_humidity'];
+    //     } catch (\Exception $e) {
+    //     }
+
+    //     $device_serial_number = $request->serialNumber;
+    //     $PreviousRecord = null;
+
+    //     if ($device_serial_number != '') {
+
+
+    //         $PreviousRecord = DeviceSensorLogs::where("serial_number", $device_serial_number)
+
+    //             ->orderBy("log_time", "DESC")
+    //             ->first();
+
+
+
+
+    //         if ($request->filled("alarm_status")) {
+    //             $alarm_status = $request->alarm_status;
+    //         }
+
+    //         if ($request->filled("battery")) {
+    //             $battery = $request->battery;
+    //         }
+    //         if ($PreviousRecord) {
+    //             if ($alarm_status == 0 && $PreviousRecord['alarm_status'] == 1) {
+
+    //                 $previousLogTime = $PreviousRecord['log_time'];
+    //                 $Time = date("Y-m-d H:i:s");
+
+    //                 $datetime1 = new DateTime($Time);
+    //                 $datetime2 = new DateTime($previousLogTime);
+
+    //                 $interval = $datetime1->diff($datetime2);
+    //                 $minutesDifference = $interval->i; // i represents the minutes part of the interval
+
+    //                 if ($minutesDifference <= 1) {
+    //                     $alarm_status = 1;
+    //                 }
+    //             }
+    //         }
+
+
+
+
+    //         if ($temparature == "NaN") {
+    //             $temparature = 0;
+    //         }
+    //         if ($humidity == "NaN") {
+    //             $humidity = 0;
+    //         }
+
+
+    //         $logs["serial_number"] = $device_serial_number;
+    //         $logs["temparature"] = $temparature;
+    //         $logs["alarm_status"] = $alarm_status;
+    //         $logs["humidity"] = $humidity;
+    //         $logs["battery"] = $battery; //== 1 ? 0 : 1;
+
+
+
+    //         $logs["log_time"] = $log_time;
+    //         try {
+    //             $insertedId = DeviceSensorLogs::create($logs);
+    //         } catch (\Exception $e) {
+    //         }
+    //         $deviceModel = Device::where("serial_number", $device_serial_number);
+
+    //         if (count($deviceModel->clone()->get()) == 0) {
+    //             return $this->response('Device Information is not available', null, false);
+    //         }
+
+    //         $row = [];
+
+    //         if ($temparature >= $max_temparature) {
+    //             $row["temparature_alarm_status"] = 1;
+    //             $row["temparature_alarm_start_datetime"] = $log_time;
+    //         }
+    //         if ($humidity >= $max_humidity) {
+    //             $row["humidity_alarm_status"] = 1;
+    //             $row["humidity_alarm_start_datetime"] = $log_time;
+    //         }
+
+
+    //         // $row["alarm_status"] = $alarm_status;
+    //         // $row["battery_level"] = $battery;
+
+    //         //battery
+    //         if ($battery == 0) {
+
+    //             $exist = $deviceModel->clone()->where("battery_level",   0)->exists();
+
+    //             // $currentDateTime = Carbon::now();
+    //             // $fiveMinutesAgo = $currentDateTime->copy()->subMinutes(5);
+
+    //             // return  $logs = DeviceSensorLogs::where("serial_number", $device_serial_number)
+    //             //     ->whereDate('log_time', '<=', $fiveMinutesAgo->toDateString())
+    //             //     ->orWhere(function ($query) use ($fiveMinutesAgo) {
+    //             //         $query->whereDate('log_time', $fiveMinutesAgo->toDateString())
+    //             //             ->whereTime('log_time', '<=', $fiveMinutesAgo->toTimeString());
+    //             //     })
+    //             //     ->get();
+
+    //             if (!$exist) {
+    //                 $message[] =  $this->SendWhatsappNotification("Batery Level is 0",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+
+    //                 $row = [];
+    //                 $row["battery_level"] = $battery;
+
+    //                 $deviceModel->clone()->where("battery_level", '!=', 0)->update($row);
+    //             }
+    //         } else if ($battery > 0) {
+    //             $row = [];
+    //             $row["battery_level"] = $battery;
+
+    //             $deviceModel->clone()->update($row);
+    //         }
+    //         //alarm_status
+    //         if ($alarm_status == 1) {
+
+    //             $exist = $deviceModel->clone()->where("battery_level",   1)->exists();
+    //             if (!$exist) {
+    //                 $message[] =  $this->SendWhatsappNotification("fire Detection",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+
+
+
+    //                 $row = [];
+    //                 $row["alarm_status"] = $alarm_status;
+    //                 $row["alarm_start_datetime"] = $log_time;
+    //                 $deviceModel->clone()->update($row);
+    //             }
+    //         } else if ($alarm_status == 0) {
+
+    //             $exist = $deviceModel->clone()->where("alarm_status",   0)->exists();
+    //             if (!$exist) {
+    //                 $row = [];
+    //                 $row["alarm_status"] = $alarm_status;
+    //                 $row["alarm_end_datetime"] = $log_time;
+
+    //                 $deviceModel->clone()->where("alarm_status", 1)->update($row);
+    //             }
+
+    //             //avg response 
+
+    //             if ($PreviousRecord) {
+    //                 if ($PreviousRecord['alarm_status'] == 1) {
+
+    //                     $previousLogTime = $PreviousRecord['log_time'];
+    //                     $Time = date("Y-m-d H:i:s");
+
+    //                     $datetime1 = new DateTime($Time);
+    //                     $datetime2 = new DateTime($previousLogTime);
+
+    //                     $interval = $datetime1->diff($datetime2);
+    //                     $minutesDifference = $interval->i; // i represents the minutes part of the interval
+
+    //                     DeviceSensorLogs::where("id", $insertedId->id)->update(["response_minutes" => $minutesDifference]);
+    //                 }
+    //             }
+
+
+
+
+    //             //$insertedId
+    //         }
+
+
+    //         //return [$logs, $row];
+
+    //         // Device::where("serial_number", $device_serial_number)
+    //         //     ->update($row);
+
+
+
+    //         return $this->response('Successfully Updated', null, true);
+    //     }
+    //     // } catch (\Exception $e) {
+    //     //     Storage::append("logs/alarm_error/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()) . ' \n' . $e->getMessage());
+
+    //     //     return  $e->getMessage();
+    //     // }
+
+    //     return $this->response('Data error', null, false);
+    // }
 
     public function SendWhatsappNotification($issue, $room_name, $model1, $date)
     {

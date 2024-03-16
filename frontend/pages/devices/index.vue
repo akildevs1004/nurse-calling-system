@@ -636,6 +636,23 @@
           <v-col md="12">
             <v-autocomplete
               class="pb-0"
+              :hide-details="!payload.category_id"
+              v-model="payload.category_id"
+              placeholder="Category"
+              outlined
+              dense
+              label="Category"
+              :items="deviceCategoriesList"
+              item-value="id"
+              item-text="name"
+            ></v-autocomplete>
+            <span v-if="errors && errors.category_id" class="error--text"
+              >{{ errors.category_id[0] }}
+            </span>
+          </v-col>
+          <v-col md="12">
+            <v-autocomplete
+              class="pb-0"
               :hide-details="!payload.utc_time_zone"
               v-model="payload.utc_time_zone"
               placeholder="Time Zone"
@@ -678,23 +695,6 @@
               >{{ errors.serial_number[0] }}
             </span>
           </v-col>
-          <v-col md="12">
-            <v-autocomplete
-              class="pb-0"
-              :hide-details="!payload.category_id"
-              v-model="payload.category_id"
-              placeholder="Category"
-              outlined
-              dense
-              label="Category"
-              :items="deviceCategoriesList"
-              item-value="id"
-              item-text="name"
-            ></v-autocomplete>
-            <span v-if="errors && errors.category_id" class="error--text"
-              >{{ errors.category_id[0] }}
-            </span>
-          </v-col>
         </v-row>
       </v-form>
       <v-row v-if="deviceResponse">
@@ -727,6 +727,9 @@
       </v-tab>
       <v-tab>
         <span>Categories</span>
+      </v-tab>
+      <v-tab>
+        <span>Colors</span>
       </v-tab>
 
       <v-tab-item>
@@ -957,6 +960,91 @@
           <v-card-text> <DeviceCategories /> </v-card-text>
         </v-card>
       </v-tab-item>
+
+      <v-tab-item>
+        <v-card>
+          <v-card-text>
+            <v-row>
+              <v-col cols="3">
+                <label class="col-form-label">Normal Top Color </label>
+                <v-text-field
+                  dense
+                  outlined
+                  :hide-details="!errors.device_normal_top_color"
+                  v-model="payloadDeviceColors.device_normal_top_color"
+                  class="input-group--focused"
+                  :error="errors.device_normal_top_color"
+                  :error-messages="
+                    errors && errors.device_normal_top_color
+                      ? errors.device_normal_top_color
+                      : ''
+                  "
+                ></v-text-field>
+              </v-col>
+              <v-col cols="3">
+                <label class="col-form-label">Normal Box Color </label>
+                <v-text-field
+                  dense
+                  outlined
+                  :hide-details="!errors.device_normal_body_color"
+                  v-model="payloadDeviceColors.device_normal_body_color"
+                  class="input-group--focused"
+                  :error="errors.device_normal_body_color"
+                  :error-messages="
+                    errors && errors.device_normal_body_color
+                      ? errors.device_normal_body_color
+                      : ''
+                  "
+                ></v-text-field>
+              </v-col>
+              <v-col cols="3">
+                <label class="col-form-label">Alarm Top Color </label>
+                <v-text-field
+                  dense
+                  outlined
+                  :hide-details="!errors.device_alarm_top_color"
+                  v-model="payloadDeviceColors.device_alarm_top_color"
+                  class="input-group--focused"
+                  :error="errors.device_alarm_top_color"
+                  :error-messages="
+                    errors && errors.device_alarm_top_color
+                      ? errors.device_alarm_top_color
+                      : ''
+                  "
+                ></v-text-field>
+              </v-col>
+              <v-col cols="3">
+                <label class="col-form-label">Alarm Box color </label>
+                <v-text-field
+                  dense
+                  outlined
+                  :hide-details="!errors.device_alarm_body_color"
+                  v-model="payloadDeviceColors.device_alarm_body_color"
+                  class="input-group--focused"
+                  :error="errors.device_alarm_body_color"
+                  :error-messages="
+                    errors && errors.device_alarm_body_color
+                      ? errors.device_alarm_body_color
+                      : ''
+                  "
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <div class="text-right">
+                  <v-btn
+                    dark
+                    small
+                    color="primary"
+                    @click="update_device_setting"
+                  >
+                    Submit
+                  </v-btn>
+                </div>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-tab-item>
     </v-tabs>
   </div>
 </template>
@@ -1033,6 +1121,7 @@ export default {
       total: 0,
       per_page: 100,
     },
+    payloadDeviceColors: {},
     options: {},
     endpoint: "device",
     search: "",
@@ -1165,6 +1254,30 @@ export default {
     }, 1000 * 60);
   },
   async created() {
+    this.payloadDeviceColors.device_normal_top_color =
+      this.$auth.user.company.device_normal_top_color ?? "#11b393";
+
+    this.payloadDeviceColors.device_normal_body_color =
+      this.$auth.user.company.device_normal_body_color ?? "#11518d";
+
+    this.payloadDeviceColors.device_alarm_top_color =
+      this.$auth.user.company.device_alarm_top_color ?? "#fe0000";
+    this.payloadDeviceColors.device_alarm_body_color =
+      this.$auth.user.company.device_alarm_body_color ?? "#ffde00";
+
+    // if (this.$auth.user.company.device_normal_top_color == "") {
+    //   this.payloadDeviceColors.device_normal_top_color = "#11b393";
+    // }
+    // if (this.$auth.user.company.device_normal_body_color == "") {
+    //   this.payloadDeviceColors.device_normal_body_color = "#11518d";
+    // }
+    // if (this.$auth.user.company.device_alarm_top_color == "") {
+    //   this.payloadDeviceColors.device_alarm_top_color = "#11b393";
+    // }
+    // if (this.$auth.user.company.device_normal_body_color == "") {
+    //   this.payloadDeviceColors.device_normal_body_color = "#11b393";
+    // }
+
     this.loading = true;
 
     if (this.$auth.user.branch_id) {
@@ -1813,7 +1926,24 @@ export default {
           .catch((e) => console.log(e));
       }
     },
+    update_device_setting() {
+      this.$axios
+        .post(
+          `/company/${this.$auth?.user?.company?.id}/update/device_colors`,
+          this.payloadDeviceColors
+        )
+        .then(({ data }) => {
+          this.loading = false;
 
+          if (!data.status) {
+            this.errors = data.errors;
+          } else {
+            this.snackbar = true;
+            this.response = "Setting updated successfully";
+          }
+        })
+        .catch((e) => console.log(e));
+    },
     getFunctionIcon(item) {
       if (item.function == "auto") {
         return "/icons/function_in_out.png?t=2";

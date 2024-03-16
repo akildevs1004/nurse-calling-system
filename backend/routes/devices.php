@@ -26,6 +26,10 @@ Route::get('device/getLastRecordsHistory/{company_id}/{count}', [DeviceControlle
 Route::post('device/delete/selected', [DeviceController::class, 'deleteSelected']);
 Route::get('device_list', [DeviceController::class, 'getDeviceList']);
 Route::get('device_list_not_manual', [DeviceController::class, 'getDeviceListNotManul']);
+Route::post('company/{company_id}/update/device_colors', [DeviceController::class, 'updateDeviceDashboardColors']);
+
+
+
 
 
 

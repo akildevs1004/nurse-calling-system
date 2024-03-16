@@ -330,7 +330,34 @@ class DeviceSensorLogsController extends Controller
         return  $finalarray;
     }
 
+    public function getDeviceDeviceAlarms(Request $request)
+    {
 
+
+
+        $logs = AlarmDeviceSensorLogs::with(["device.category"])
+            ->where('company_id', $request->company_id)
+            ->where('log_time', '>=', $request->date_from . ' 00:00:00')
+            ->where('log_time', '<=', $request->date_to . ' 23:59:59')
+            ->where('alarm_status', 1)
+            ->get()->groupBy('serial_number');
+
+
+
+        // Initialize data array
+        $data = [];
+
+        // Loop through categories and populate data array with counts
+        foreach ($logs as  $device => $category) {
+            $categoryName = $device;
+            $count = count($category);
+            $data[] = ["category" => $categoryName, "count" => $count];
+        }
+        usort($data, function ($a, $b) {
+            return $b['count'] - $a['count'];
+        });
+        return  $data;
+    }
 
     public function getDeviceCategoryAlarms(Request $request)
     {

@@ -1,6 +1,13 @@
 <template>
   <div>
     <v-row>
+      <v-card
+        class="ma-5 text-center"
+        style="width: 100%; height: 800px"
+        v-if="devices.length == 0"
+      >
+        <v-card-text class="pa-10"><h3>No Data is available</h3></v-card-text>
+      </v-card>
       <v-col :key="index3" :cols="colsSize" v-for="(device, index3) in devices">
         <!-- <div
           style="
@@ -238,12 +245,16 @@ export default {
   },
   methods: {
     getHeadBgColor(device) {
-      if (device.alarm_status == 0) return "#11b393";
-      else if (device.alarm_status == 1) return "#fe0000";
+      if (device.alarm_status == 0)
+        return this.$auth.user.company.device_normal_top_color ?? "#11b393";
+      else if (device.alarm_status == 1)
+        return this.$auth.user.company.device_normal_body_color ?? "#fe0000";
     },
     getBodyBgColor(device) {
-      if (device.alarm_status == 0) return "#11518d";
-      else if (device.alarm_status == 1) return "#ffde00";
+      if (device.alarm_status == 0)
+        return this.$auth.user.company.device_alarm_top_color ?? "#11518d";
+      else if (device.alarm_status == 1)
+        return this.$auth.user.company.device_alarm_body_color ?? "#ffde00";
     },
     getImage(device) {
       let imagename = "normal";

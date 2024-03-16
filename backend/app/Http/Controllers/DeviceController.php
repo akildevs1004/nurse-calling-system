@@ -119,6 +119,24 @@ class DeviceController extends Controller
     {
         return $model->with(['status'])->where('company_id', $request->company_id)->orderBy("name", "asc")->get();
     }
+
+    public function updateDeviceDashboardColors($id = 0, Request $request)
+    {
+
+
+        if ($id > 0) {
+            $data = [
+                "device_normal_top_color" => $request->device_normal_top_color,
+                "device_normal_body_color" => $request->device_normal_body_color,
+                "device_alarm_top_color" => $request->device_alarm_top_color,
+                "device_alarm_body_color" => $request->device_alarm_body_color
+            ];
+
+            Company::where("id", $id)->update($data);
+        }
+
+        return $this->response('Colors are successfully Updated.', [], true);
+    }
     public function getDeviceListNotManul(Device $model, Request $request)
     {
 

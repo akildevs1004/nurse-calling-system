@@ -677,6 +677,23 @@
           <v-col md="12">
             <v-autocomplete
               class="pb-0"
+              :hide-details="!payload.status_id"
+              v-model="payload.status_id"
+              placeholder="Time Zone"
+              outlined
+              dense
+              label="Device Status *"
+              :items="device_statusses"
+              item-value="id"
+              item-text="name"
+            ></v-autocomplete>
+            <span v-if="errors && errors.status_id" class="error--text"
+              >{{ errors.status_id[0] }}
+            </span>
+          </v-col>
+          <v-col md="12">
+            <v-autocomplete
+              class="pb-0"
               :hide-details="!payload.utc_time_zone"
               v-model="payload.utc_time_zone"
               placeholder="Time Zone"
@@ -761,23 +778,7 @@
               >{{ errors.device_type[0] }}
             </span>
           </v-col>
-          <v-col md="12">
-            <v-autocomplete
-              class="pb-0"
-              :hide-details="!payload.status_id"
-              v-model="payload.status_id"
-              placeholder="Time Zone"
-              outlined
-              dense
-              label="Device Status *"
-              :items="device_statusses"
-              item-value="id"
-              item-text="name"
-            ></v-autocomplete>
-            <span v-if="errors && errors.status_id" class="error--text"
-              >{{ errors.status_id[0] }}
-            </span>
-          </v-col>
+
           <!-- <v-col md="12">
             <v-autocomplete
               class="pb-0"
@@ -1842,13 +1843,13 @@ export default {
           params: {
             ...this.options,
             ...this.filters,
-            company_id:this.company_id
+            company_id: this.company_id,
           },
         })
         .then(({ data }) => {
-            this.data = data.data;
-            this.totalRowsCount = data.total;
-            this.loading = false;
+          this.data = data.data;
+          this.totalRowsCount = data.total;
+          this.loading = false;
         });
     },
     async updateDevicesHealth() {

@@ -1035,8 +1035,10 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (to.name == "monitor-id")
-        this.setSubLeftMenuItems("dashboard", "/monitor");
+      console.log(to);
+      if (to.name == "monitor-id") {
+        this.setSubLeftMenuItems("dashboard", to.fullPath);
+      }
 
       console.log("to.name", to.name);
       this.displayDeviceCategories = to.name == "monitor-id" ? true : false;
