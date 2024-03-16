@@ -1303,30 +1303,6 @@ export default {
         }
 
         this.pendingNotificationsCount = pendingcount;
-        // console.log("pendingcount", pendingcount);
-        // if (pendingcount == 0) {
-        //   this.pendingNotificationsCount = 0;
-        // } else this.pendingNotificationsCount = pendingcount;
-        // console.log(
-        //   "pendingcount",
-        //   pendingcount,
-        //   this.pendingNotificationsCount
-        // );
-        // if (this.pendingNotificationsCount == "") {
-        //   this.pendingNotificationsCount = 0;
-        // }
-        // if (this.pendingNotificationsCount > 0) {
-        //   //console.log("this.$config", this.$config);
-        //   document.title =
-        //     "Mytime2Cloud " +
-        //     " - Notifications Pending : " +
-        //     this.pendingNotificationsCount;
-        // }
-
-        // let menu1 = { title: "Leave Notifications (2)", click: "Test" };
-        // let menu2 = { title: "Visitor Notifications (2)", click: "Test" };
-        // this.notificationsMenuItems.push(menu1);
-        // this.notificationsMenuItems.push(menu2);
       });
     },
     verifyAlarmStatus() {

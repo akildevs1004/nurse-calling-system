@@ -241,26 +241,27 @@
         class="hide-on-mobile d-none d-lg-flex"
       >
         <div class="about-content">
-          <h3>About Xtreme Guard</h3>
+          <h3>
+            About Nurse Calling Automation Alarm and Elderly Care Solutions
+          </h3>
           <div style="font-weight: 300">
             Xtreme Guard is an innovative and comprehensive platform.
-            <br />In today's technology-driven era, Securing server rooms
-            requires a multifaceted approach, and incorporating advanced
-            security systems is essential for ensuring the safety and
-            reliability of critical infrastructure. This content will detail the
-            importance of humidity and temperature monitoring alongside fire
-            alarms, smoke alarms, water leakage alarms, power-off alarms, and
-            door open status monitors for comprehensive server room protection.
+            <br />In today's age of technological advancements, ensuring the
+            safety and well-being of elderly individuals and those with
+            disabilities is paramount. Nurse calling automation alarms and
+            specialized solutions for the elderly and disabled provide
+            invaluable support in various care settings. This content will
+            highlight the significance of these systems in enhancing the quality
+            of care and promoting independence for vulnerable populations.
           </div>
           <h3 class="pt-10">Features</h3>
           <ul style="font-weight: 300">
-            <li>Temparature Monitoring</li>
-            <li>Humidity Monitoring</li>
-            <li>Fire/Smoke Detective Alarm Systems</li>
-
-            <li>Water Leakage Alarm Systems</li>
-            <li>Power-Off Alarm Systems</li>
-            <li>Door Open Status Monitoring</li>
+            <li>Nurse Calling Automation Alarm</li>
+            <li>Elderly Care Alarm Systems</li>
+            <li>Disabled Toilet Alarm Automation</li>
+            <li>Baby Care Monitoring</li>
+            <li>Customized Alerts and Notifications</li>
+            <li>Integration with Monitoring Platforms</li>
           </ul>
           <v-row class="text-left pt-10">
             <v-col class="pa-5">

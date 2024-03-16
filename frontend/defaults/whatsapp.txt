@@ -4,4 +4,4 @@ Total *({$offlineDevicesCount})* of your devices are currently offline. Please t
 Devices location: *{$msg_locations}*.\n\n
 If you have any questions or need assistance, feel free to reach out.\n\n
 Best regards\n 
-*MyTime2Cloud*
+*XtremeGuard*

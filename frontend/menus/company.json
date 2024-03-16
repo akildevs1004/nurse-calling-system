@@ -17,7 +17,7 @@
   },
 
   {
-    "icon": "mdi-alarm-light",
+    "icon": "mdi-bell",
     "title": "Alarm Reports",
     "to": "/nurse-calling/AlarmLogs",
     "menu": "employee_schedule_access",
@@ -40,7 +40,7 @@
   },
 
   {
-    "icon": "mdi-alarm-light",
+    "icon": "mdi-bell",
     "title": "Alarm Reports",
     "to": "/nurse-calling/AlarmLogs",
     "menu": "leftmenu",
