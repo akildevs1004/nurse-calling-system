@@ -46,10 +46,10 @@
                 <v-icon left> mdi-lock </v-icon>
                 <span>Password</span>
               </v-tab>
-              <v-tab>
+              <!-- <v-tab>
                 <v-icon left> mdi-whatsapp </v-icon>
                 <span>Whatsapp Settings</span>
-              </v-tab>
+              </v-tab> -->
 
               <v-tab-item>
                 <v-card flat>

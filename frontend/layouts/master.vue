@@ -196,12 +196,7 @@ export default {
           to: "/master/companies",
           permission: this.can("company_access"),
         },
-        {
-          icon: "mdi-account-multiple",
-          title: "Communities",
-          to: "/master/communities",
-          permission: this.can("company_access"),
-        },
+
         {
           icon: "mdi-login-variant",
           title: "Logs",
