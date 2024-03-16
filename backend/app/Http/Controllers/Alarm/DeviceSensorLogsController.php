@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Alarm\DeviceSensorLogs as AlarmDeviceSensorLogs;
 use App\Models\Company;
 use App\Models\Device;
+use App\Models\DevicesAlarmLogs;
 use App\Models\DevicesCategories;
 use App\Models\DeviceSensorLogs;
 use DateInterval;
@@ -26,9 +27,61 @@ class DeviceSensorLogsController extends Controller
     {
     }
 
+    public function getAlarmReports(Request $request)
+    {
+        $model = DevicesAlarmLogs::with(["device.category"])->where("company_id", $request->company_id)
+            ->where("company_id", $request->company_id);
+
+        if ($request->filled("device_serial_number")) {
+            $model->where("serial_number", $request->device_serial_number);
+        }
+        if ($request->filled("from_date")) {
+            $model->whereDate("alarm_start_datetime", '>=', $request->from_date);
+        }
+        if ($request->filled("to_date")) {
+            $model->whereDate("alarm_end_datetime", '<=', $request->to_date);
+        }
+        // if ($request->filled("filter_alarm_status")) {
+
+        //     $model->where(function ($query) use ($request) {
+        //         $query->where("alarm_status", $request->filter_alarm_status);
+        //     });
+        // }
+        // if ($request->filled("filter_battery")) {
+
+        //     $model->where(function ($query) use ($request) {
+        //         $query->where("battery", '>=', $request->filter_battery);
+        //     });
+        // }
+
+
+        // { name: `Smoke  Only`, value: `1` },
+        // { name: `Water  Only`, value: `2` },
+        // { name: `Door  Only`, value: `3` },
+        // { name: `C Power  Only`, value: `4` },
+
+        $model->when(
+            $request->filled('sortBy'),
+            function ($q) use ($request) {
+                $sortDesc = $request->input('sortDesc'); {
+                    $q->orderBy($request->sortBy . "", $sortDesc == 'true' ? 'desc' : 'asc'); {
+                    }
+                }
+            }
+        );
+
+        if (!$request->sortBy) {
+            $model->orderBy('alarm_start_datetime', 'DESC');
+        }
+
+
+
+        return    $model->paginate($request->per_page);
+    }
+
     public function getDeliveLogs(Request $request)
     {
-        $model = AlarmDeviceSensorLogs::with(["device"])->where("company_id", $request->company_id)
+        $model = AlarmDeviceSensorLogs::with(["device.category"])->where("company_id", $request->company_id)
             ->where("company_id", $request->company_id);
 
         if ($request->filled("device_serial_number")) {

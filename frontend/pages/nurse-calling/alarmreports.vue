@@ -28,11 +28,11 @@
             </span>
 
             <v-spacer></v-spacer>
-            <span>
+            <!-- <span>
               <v-select
                 @change="getDataFromApi()"
                 style="height: 30px; width: 230px; margin-right: 21px"
-                label="Alarm"
+                label="Alarm Status"
                 outlined
                 dense
                 small
@@ -40,23 +40,20 @@
                 item-text="name"
                 item-value="value"
                 :items="[
-                  // { name: `All`, value: null },
-                  { name: `Any Alarm Detected`, value: 1 },
-                  { name: `Smoke/Fire Detected `, value: 2 },
-                  { name: `Water  Leakage`, value: 3 },
-                  { name: `Door  Open`, value: 4 },
-                  { name: `AC Power Off`, value: 5 },
+                  { name: `All`, value: null },
+                  { name: `Alarm Detected`, value: 1 },
+                  { name: `No Alarm `, value: 0 },
 
                   //{ name: `All Alarm - Normal`, value: 0 },
                 ]"
-                placeholder="Room"
+                placeholder="Alarm Status"
               ></v-select>
-            </span>
+            </span> -->
             <span>
               <v-autocomplete
                 @change="getDataFromApi()"
                 style="height: 30px; width: 180px; margin-right: 21px"
-                label="Room"
+                label="Room/Device"
                 outlined
                 dense
                 small
@@ -67,7 +64,7 @@
                   { name: `All Rooms`, serial_number: null },
                   ...devices,
                 ]"
-                placeholder="Room"
+                placeholder="Room/Device"
               ></v-autocomplete>
             </span>
             <span>
@@ -115,37 +112,14 @@
             <template v-slot:item.device_name="{ item }">
               {{ item.device.name }}
             </template>
-            <template v-slot:item.log_time="{ item }">
-              {{ $dateFormat.format6(item.log_time) }}
-              <div class="secondary-value">
-                {{ $dateFormat.format1(item.log_time) }}
-              </div>
+            <template v-slot:item.category="{ item }">
+              {{ item.device.category.name }}
             </template>
-            <template v-slot:item.temperature="{ item }">
-              <span v-html="item.temparature + '&deg;C'"></span>
+            <template v-slot:item.location="{ item }">
+              {{ item.device.location }}
             </template>
-            <template v-slot:item.humidity="{ item }">
-              {{ item.humidity }}%
-            </template>
-            <template v-slot:item.smoke_alarm="{ item }">
-              <v-icon :style="getPriorityColor(item.smoke_alarm)"
-                >mdi mdi-alarm-light
-              </v-icon>
-            </template>
-            <template v-slot:item.water_leakage="{ item }">
-              <v-icon :style="getPriorityColor(item.water_leakage)"
-                >mdi mdi-alarm-light
-              </v-icon>
-            </template>
-            <template v-slot:item.power_failure="{ item }">
-              <v-icon :style="getPriorityColor(item.power_failure)"
-                >mdi mdi-alarm-light
-              </v-icon>
-            </template>
-            <template v-slot:item.door_status="{ item }">
-              <v-icon :style="getPriorityColor(item.door_status)"
-                >mdi mdi-alarm-light
-              </v-icon>
+            <template v-slot:item.response_minutes="{ item }">
+              {{ $dateFormat.minutesToHHMM(item.response_minutes) }}
             </template>
           </v-data-table>
         </v-card>
@@ -164,7 +138,7 @@ export default {
   },
   data: () => ({
     cumulativeIndex: 1,
-    filter_alarm_status: 1,
+    filter_alarm_status: null,
     filter_device_serial_number: null,
     filter_from_date: null,
     filter_to_date: null,
@@ -190,7 +164,7 @@ export default {
     snackText: "",
     departments: [],
     Model: "Log",
-    endpoint: "alarm_device_logs",
+    endpoint: "alarm_reports",
 
     from_date: null,
     from_menu: false,
@@ -247,76 +221,57 @@ export default {
         sortable: false,
         key: "device_name",
         value: "device_name",
-        width: "150px",
+
         filterable: true,
         filterSpecial: false,
       },
       {
-        text: "Date",
+        text: "Location",
+        align: "left",
+        sortable: false,
+        key: "location",
+        value: "location",
+
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
+        text: "Category",
         align: "center",
         sortable: true,
-        key: "log_time",
-        value: "log_time",
-        width: "150px",
-        filterable: true,
-        filterSpecial: false,
-      },
-      {
-        text: "Temperature",
-        align: "center",
-        sortable: false,
-        key: "temperature", //sorting
-        value: "temperature", //edit purpose
+        key: "category",
+        value: "category",
 
         filterable: true,
         filterSpecial: false,
       },
       {
-        text: "Humidity",
+        text: "Start Date",
         align: "center",
-        sortable: false,
-        key: "humidity", //sorting
-        value: "humidity", //edit purpose
+        sortable: true,
+        key: "alarm_start_datetime",
+        value: "alarm_start_datetime",
+
+        filterable: true,
+        filterSpecial: false,
+      },
+
+      {
+        text: "End Date",
+        align: "center",
+        sortable: true,
+        key: "alarm_end_datetime",
+        value: "alarm_end_datetime",
 
         filterable: true,
         filterSpecial: false,
       },
       {
-        text: "Smoke/Fire Detected",
+        text: "Response Time",
         align: "center",
-        sortable: false,
-        key: "smoke_alarm", //sorting
-        value: "smoke_alarm", //edit purpose
-
-        filterable: true,
-        filterSpecial: false,
-      },
-      {
-        text: "Water Leakage",
-        align: "center",
-        sortable: false,
-        key: "water_leakage", //sorting
-        value: "water_leakage", //edit purpose
-
-        filterable: true,
-        filterSpecial: false,
-      },
-      {
-        text: "AC Power Failure  ",
-        align: "center",
-        sortable: false,
-        key: "power_failure", //sorting
-        value: "power_failure", //edit purpose
-
-        filterable: true,
-        filterSpecial: false,
-      },
-      {
-        text: "Door Status",
-        align: "center",
-        sortable: false,
-        key: "door_status", //sorting
-        value: "door_status", //edit purpose
+        sortable: true,
+        key: "response_minutes",
+        value: "response_minutes",
 
         filterable: true,
         filterSpecial: false,
@@ -354,8 +309,8 @@ export default {
       this.headers_table.splice(1, 0, ...branch_header);
     }
     this.firstLoad();
-    this.getDepartments();
-    this.getbranchesList();
+    // this.getDepartments();
+    // this.getbranchesList();
   },
   watch: {
     options: {
@@ -394,7 +349,7 @@ export default {
     getPriorityColor(status) {
       if (status == 1) {
         return "color:red";
-      }
+      } else return "color:#DDD";
     },
     getbranchesList() {
       this.payloadOptions = {

@@ -41,4 +41,8 @@ Route::get('alarm_dashboard_get_statistics', [DeviceSensorLogsController::class,
 
 Route::get('alarm_dashboard_get_humidity_hourly_data', [DeviceSensorLogsController::class, 'getDeviceTodayHourlyHumidity']);
 Route::get('alarm_device_logs', [DeviceSensorLogsController::class, 'getDeliveLogs']);
+Route::get('alarm_reports', [DeviceSensorLogsController::class, 'getAlarmReports']);
+
+
+
 Route::get('delete_alarm_device_logs', [DeviceSensorLogsController::class, 'deleteOneMonthOldLogs']);

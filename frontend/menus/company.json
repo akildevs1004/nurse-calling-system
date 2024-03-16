@@ -15,11 +15,18 @@
     "menu": "branch_access",
     "module": "dashboard"
   },
-
   {
     "icon": "mdi-bell",
     "title": "Alarm Reports",
-    "to": "/nurse-calling/AlarmLogs",
+    "to": "/nurse-calling/alarmreports",
+    "submenu": "leftmenu",
+    "menu": "branch_access",
+    "module": "dashboard"
+  },
+  {
+    "icon": "mdi-bell",
+    "title": "Alarm Logs",
+    "to": "/nurse-calling/alarmlogs",
     "menu": "employee_schedule_access",
     "submenu": "leftmenu",
     "module": "dashboard"
@@ -38,12 +45,20 @@
     "menu": "leftmenu",
     "module": "leftmenu"
   },
+  {
+    "icon": "mdi-bell",
+    "title": "Alarm Reports",
+    "to": "/nurse-calling/alarmreports",
+    "menu": "leftmenu",
+    "module": "leftmenu"
+  },
 
   {
     "icon": "mdi-bell",
     "title": "Alarm Reports",
-    "to": "/nurse-calling/AlarmLogs",
-    "menu": "leftmenu",
+    "to": "/nurse-calling/alarmlogs",
+    "menu": "employee_schedule_access",
+
     "module": "leftmenu"
   },
   {

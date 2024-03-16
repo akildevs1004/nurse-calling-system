@@ -11,7 +11,7 @@
         <v-card elevation="0" class="mt-2">
           <v-toolbar class="mb-2 white--text" color="white" dense flat>
             <v-toolbar-title>
-              <span style="color: black"> Alarm Reports</span></v-toolbar-title
+              <span style="color: black"> Alarm Logs</span></v-toolbar-title
             >
             <span>
               <v-btn
@@ -112,13 +112,19 @@
             <template v-slot:item.device_name="{ item }">
               {{ item.device.name }}
             </template>
+            <template v-slot:item.location="{ item }">
+              {{ item.device.location }}
+            </template>
             <template v-slot:item.log_time="{ item }">
-              {{ $dateFormat.format6(item.log_time) }}
+              <!-- {{ $dateFormat.format6(item.log_time) }}
               <div class="secondary-value">
                 {{ $dateFormat.format1(item.log_time) }}
-              </div>
+              </div> -->
+              {{ item.log_time }}
             </template>
-
+            <template v-slot:item.category="{ item }">
+              {{ item.device.category.name }}
+            </template>
             <template v-slot:item.battery_level="{ item }">
               <div v-if="item.battery <= 10" :style="'color:red'">
                 {{ item.battery }}%
@@ -230,7 +236,27 @@ export default {
         sortable: false,
         key: "device_name",
         value: "device_name",
-        width: "150px",
+
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
+        text: "Location",
+        align: "left",
+        sortable: false,
+        key: "location",
+        value: "location",
+
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
+        text: "Category",
+        align: "center",
+        sortable: true,
+        key: "category",
+        value: "category",
+
         filterable: true,
         filterSpecial: false,
       },
@@ -240,7 +266,7 @@ export default {
         sortable: true,
         key: "log_time",
         value: "log_time",
-        width: "150px",
+
         filterable: true,
         filterSpecial: false,
       },
@@ -478,3 +504,4 @@ export default {
   },
 };
 </script>
+./alarmlogs.vue

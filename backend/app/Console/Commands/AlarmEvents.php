@@ -14,21 +14,21 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\NotifyIfLogsDoesNotGenerate;
 use Illuminate\Support\Facades\DB;
 
-class AlarmUpdateCompanyIds extends Command
+class AlarmEvents extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'task:alarm_update_company_ids';
+    protected $signature = 'task:create_alarm_events';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Update Alarm Company Ids';
+    protected $description = 'Create Alarm Event';
 
     /**
      * Execute the console command.
@@ -37,6 +37,8 @@ class AlarmUpdateCompanyIds extends Command
      */
     public function handle()
     {
-        echo (new DeviceSensorLogsController)->updateCompanyIds();
+
+
+        echo (new ApiAlarmControlController)->updateAlarmResponseTime();
     }
 }

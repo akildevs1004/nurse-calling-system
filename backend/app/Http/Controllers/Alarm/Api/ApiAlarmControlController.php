@@ -40,6 +40,7 @@ class ApiAlarmControlController extends Controller
             $alarm_status = $request->alarm_status;
         }
 
+
         if ($request->filled("battery")) {
             $battery = $request->battery;
         }

@@ -32,6 +32,14 @@ class Kernel extends ConsoleKernel
             //->withoutOverlapping()
             ->appendOutputTo(storage_path("logs/fire-alarm-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
 
+
+        $schedule
+            ->command('task:create_alarm_events')
+            // ->everyThirtyMinutes()
+            ->everyMinute()
+            //->withoutOverlapping()
+            ->appendOutputTo(storage_path("logs/alarm-events-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+
         // $schedule
         //     ->command('task:delete_old_logs')
         //     // ->everyThirtyMinutes()

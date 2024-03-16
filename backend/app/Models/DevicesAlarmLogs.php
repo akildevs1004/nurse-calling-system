@@ -9,4 +9,8 @@ class DevicesAlarmLogs extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    public function device()
+    {
+        return $this->belongsTo(Device::class, "serial_number", "serial_number")->withDefault(["name" => "Manual", "serial_number" => "Manual"]);
+    }
 }
