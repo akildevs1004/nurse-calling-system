@@ -306,7 +306,7 @@ export default {
   },
   watch: {},
   mounted() {
-    this.adjustGraphHeight();
+    //this.adjustGraphHeight();
   },
   created() {
     // Get today's date
