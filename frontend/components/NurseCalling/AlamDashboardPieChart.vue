@@ -2,7 +2,11 @@
   <div style="padding: 0px; width: 100%; height: auto">
     <v-row>
       <v-col cols="6" class="text-right"></v-col>
-      <v-col cols="6" class="text-right">
+      <v-col cols="6" class="text-right"> </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col cols="5">
         <v-select
           @change="applyFilter()"
           class="pt-10 px-2"
@@ -19,9 +23,11 @@
         >
         </v-select>
       </v-col>
+      <v-col cols="7">
+        <div id="visitors" name="visitors" style="width: 100%"></div>
+      </v-col>
     </v-row>
 
-    <div id="visitors" name="visitors" :height="height" width="250"></div>
     <div
       v-if="categories.length == 0"
       style="
@@ -35,25 +41,29 @@
     >
       No Data available
     </div>
-    <v-row class="bold" style="height: auto">
-      <v-col cols="1">#</v-col>
-      <v-col cols="7">Category</v-col>
-      <v-col cols="3">Alarm Events count</v-col>
-    </v-row>
-    <v-row v-for="(category, index) in categories">
-      <v-col cols="1">{{ index + 1 }}</v-col>
-      <v-col cols="7"
-        ><v-icon :color="options?.colors[index]">mdi mdi-square</v-icon
-        >{{ category.category }}</v-col
-      >
-      <v-col cols="3" class="text-center">{{ category.count }}</v-col>
-    </v-row>
+    <div style="height: 190px">
+      <v-row class="bold" style="height: auto">
+        <v-col cols="1">#</v-col>
+        <v-col cols="6">Category</v-col>
+        <v-col cols="5">Alarm Events count</v-col>
+      </v-row>
+      <div style="height: 180px; overflow-y: scroll; overflow-x: hidden">
+        <v-row v-for="(category, index) in categories">
+          <v-col cols="1">{{ index + 1 }}</v-col>
+          <v-col cols="7"
+            ><v-icon :color="options?.colors[index]">mdi mdi-square</v-icon
+            >{{ category.category }}</v-col
+          >
+          <v-col cols="3" class="text-center">{{ category.count }}</v-col>
+        </v-row>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["height", "date_from", "date_to"],
+  props: ["height", "date_from", "date_to", "width"],
   data() {
     return {
       //   items: [
@@ -74,19 +84,42 @@ export default {
           offsetY: 0,
         },
         title: {
-          text: "Alarm Events - Categories",
+          //text: "Alarm Events - Categories",
           align: "left",
           margin: 0,
         },
         //colors: ["#033F9B", "#DC7633", "#02B64B", "#ff0000", "#808080", ""],
-        colors: ["#033F9B", "#02B64B", "#ffb600", "#ff0000", "#808080", ""],
+        colors: [
+          "#033F9B",
+          "#02B64B",
+          "#ffb600",
+          "#ff0000",
+          "#808080",
+          "#800080",
+          "#00FFFF",
+          "#FF00FF",
+          "#FFFF00",
+          "#008080",
+          "#800000",
+          "#033F9B",
+          "#02B64B",
+          "#ffb600",
+          "#ff0000",
+          "#808080",
+          "#800080",
+          "#00FFFF",
+          "#FF00FF",
+          "#FFFF00",
+          "#008080",
+          "#800000",
+        ],
 
         series: [],
         chart: {
           toolbar: {
             show: false,
           },
-          width: "100%", //200 //275
+
           type: "donut",
         },
         customTotalValue: 0,

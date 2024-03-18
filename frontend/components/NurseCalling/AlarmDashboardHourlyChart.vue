@@ -32,8 +32,7 @@
 
     <div
       :id="name"
-      style="width: 100%"
-      :height="height"
+      style="width: 100%; height: 400px"
       :key="display_title"
     ></div>
   </div>
@@ -42,9 +41,10 @@
 <script>
 // import VueApexCharts from 'vue-apexcharts'
 export default {
-  props: ["name", "height", "branch_id", "date_from", "date_to"],
+  props: ["height", "branch_id", "date_from", "date_to"],
   data() {
     return {
+      name: "apexDashboardHour",
       filterDeviceId: null,
       devices: [],
       loading: false,

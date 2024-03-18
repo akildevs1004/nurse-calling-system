@@ -55,7 +55,7 @@
 
   {
     "icon": "mdi-bell",
-    "title": "Alarm Reports",
+    "title": "Alarm Logs",
     "to": "/nurse-calling/alarmlogs",
     "menu": "employee_schedule_access",
 

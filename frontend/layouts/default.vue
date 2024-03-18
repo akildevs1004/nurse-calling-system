@@ -174,7 +174,6 @@
     >
       <v-app-bar-nav-icon
         @click.stop="drawer = !drawer"
-        style="color: #fff"
         class="header-nav-bar-icon"
       />
 
@@ -189,7 +188,6 @@
         <v-col style="">
           <v-bottom-navigation
             :value="topMenu"
-            color="primary"
             style="width: 100%; box-shadow: none; background: transparent"
             elevation="0"
           >
@@ -207,7 +205,7 @@
               "
               width="auto"
             >
-              <span style="font-size: 15px; color: #fff">{{
+              <span style="font-size: 20px; color: #fff">{{
                 device.name
               }}</span>
             </v-btn>
@@ -260,9 +258,7 @@
       <v-spacer></v-spacer>
       <span style="font-size: 30px; color: #fff">
         <div>
-          <span style="font-family: cursive; color: #fff; font-size: 30px">
-            {{ currentTime }}</span
-          >
+          <span style="color: #fff; font-size: 30px"> {{ currentTime }}</span>
           <v-divider vertical style="color: #fff"></v-divider>
           <span style="font-size: 30px; color: #fff">{{
             $dateFormat.format21(currentDate)
@@ -1611,7 +1607,7 @@ header i {
   color: black !important;
 }
 .theme--dark.v-bottom-navigation .v-btn--active {
-  background: rgb(105, 70, 221);
+  /* background: rgb(105, 70, 221); */
   color: #fff !important;
 }
 </style>

@@ -253,10 +253,11 @@
       <v-col cols="8">
         <!-- {{ AlarmDashboardHourlyChartheight }} -->
         <!--  :height="AlarmDashboardHourlyChartheight"-->
-        <v-card>
+        <v-card style="height: 520px">
           <v-card-text>
             <div>
               <AlarmDashboardHourlyChart
+                v-if="keyChart3 > 0"
                 :name="'AlarmDashboardHourlyChart'"
                 :height="'400px'"
                 :key="keyChart3"
@@ -272,11 +273,11 @@
         </v-card> -->
       </v-col>
       <v-col cols="4">
-        <v-card ref="AlamDashboardPieChartDiv">
+        <v-card ref="AlamDashboardPieChartDiv" style="height: 520px">
           <v-card-text>
             <AlamDashboardPieChart
+              v-if="keyChart2 > 0"
               :name="'AlamDashboardPieChart'"
-              :height="'400px'"
               :key="keyChart2"
               :date_from="date_from"
               :date_to="date_to"
@@ -341,21 +342,21 @@ export default {
     can(per) {
       return this.$pagePermission.can(per, this);
     },
-    adjustGraphHeight() {
-      setTimeout(() => {
-        if (this.$refs.AlamDashboardPieChartDiv) {
-          console.log(
-            "this.$refs.AlamDashboardPieChartDiv",
-            this.$refs.AlamDashboardPieChartDiv
-          );
-          let height = this.$refs.AlamDashboardPieChartDiv.$el.clientHeight;
-          console.log("height", height);
-          this.AlarmDashboardHourlyChartheight = height - 100;
+    // adjustGraphHeight() {
+    //   setTimeout(() => {
+    //     if (this.$refs.AlamDashboardPieChartDiv) {
+    //       console.log(
+    //         "this.$refs.AlamDashboardPieChartDiv",
+    //         this.$refs.AlamDashboardPieChartDiv
+    //       );
+    //       let height = this.$refs.AlamDashboardPieChartDiv.$el.clientHeight;
+    //       console.log("height", height);
+    //       this.AlarmDashboardHourlyChartheight = height - 100;
 
-          //this.keyChart3++;
-        }
-      }, 4000);
-    },
+    //       //this.keyChart3++;
+    //     }
+    //   }, 4000);
+    // },
     filterAttr(data) {
       this.date_from = data.from;
       this.date_to = data.to;

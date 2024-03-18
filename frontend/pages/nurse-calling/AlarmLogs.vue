@@ -28,7 +28,7 @@
             </span>
 
             <v-spacer></v-spacer>
-            <span>
+            <!-- <span>
               <v-select
                 @change="getDataFromApi()"
                 style="height: 30px; width: 230px; margin-right: 21px"
@@ -48,7 +48,7 @@
                 ]"
                 placeholder="Alarm Status"
               ></v-select>
-            </span>
+            </span> -->
             <span>
               <v-autocomplete
                 @change="getDataFromApi()"
@@ -271,16 +271,16 @@ export default {
         filterSpecial: false,
       },
 
-      {
-        text: "Alarm Status",
-        align: "center",
-        sortable: false,
-        key: "alarm_status", //sorting
-        value: "alarm_status", //edit purpose
+      // {
+      //   text: "Alarm Status",
+      //   align: "center",
+      //   sortable: false,
+      //   key: "alarm_status", //sorting
+      //   value: "alarm_status", //edit purpose
 
-        filterable: false,
-        filterSpecial: false,
-      },
+      //   filterable: false,
+      //   filterSpecial: false,
+      // },
       {
         text: "Battery level",
         align: "center",
