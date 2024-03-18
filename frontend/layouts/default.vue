@@ -985,7 +985,7 @@ export default {
 
     setInterval(() => {
       this.verifyAlarmStatus();
-    }, 1000 * 60 * 1);
+    }, 1000 * 30 * 1);
     setInterval(() => {
       this.loadNotificationMenu();
     }, 1000 * 60 * 2);

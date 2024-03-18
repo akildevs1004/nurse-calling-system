@@ -92,7 +92,6 @@
         </div> -->
 
         <div>
-          {{ device.device_normal_top_color }}
           <v-card
             elevation="2"
             class="rounded-lg"
@@ -220,10 +219,14 @@ export default {
     },
   },
   mounted() {
+    // setInterval(() => {
+    //   const now = new Date();
+    //   this.currentTime = now.toLocaleTimeString([], { hour12: false });
+    // }, 1000);
+
     setInterval(() => {
-      const now = new Date();
-      this.currentTime = now.toLocaleTimeString([], { hour12: false });
-    }, 1000);
+      this.getDataFromApi();
+    }, 1000 * 30);
 
     let boxesPerRow = 4;
 

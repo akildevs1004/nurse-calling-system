@@ -251,12 +251,12 @@
     </v-row>
     <v-row>
       <v-col cols="8">
-        <!--  -->
-        <v-card :height="AlarmDashboardHourlyChartheight">
+        <!--  :height="AlarmDashboardHourlyChartheight"-->
+        <v-card>
           <v-card-text>
             <AlarmDashboardHourlyChart
               :name="'AlarmDashboardHourlyChart'"
-              :height="'600px'"
+              :height="'800px'"
               :key="keyChart3"
               :date_from="date_from"
               :date_to="date_to"
@@ -268,7 +268,7 @@
           <v-card-text>
             <AlamDashboardPieChart
               :name="'AlamDashboardPieChart'"
-              :height="'400px'"
+              :height="'600px'"
               :key="keyChart2"
               :date_from="date_from"
               :date_to="date_to"
@@ -354,7 +354,7 @@ export default {
       this.keyChart2++;
       this.keyChart3++;
       this.getDataFromApi();
-      this.adjustGraphHeight();
+      //this.adjustGraphHeight();
       //this.filterType = "Monthly";
     },
 

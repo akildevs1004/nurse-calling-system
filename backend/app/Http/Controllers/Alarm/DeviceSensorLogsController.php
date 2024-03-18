@@ -354,14 +354,14 @@ class DeviceSensorLogsController extends Controller
             $j = $i <= 9 ? "0" . $i : $i;
 
             // $date = date('Y-m-d'); //, strtotime(date('Y-m-d') . '-' . $i . ' days'));
-            $model = AlarmDeviceSensorLogs::where('company_id', $company_id)
+            $model = Device::where('company_id', $company_id)
 
-                ->where('log_time', '>=', $date . ' ' . $j . ':00:00')
-                ->where('log_time', '<=', $date  . ' ' . $j . ':59:59')
-                ->where('alarm_status', 1)->count();
+
+                ->where('alarm_start_datetime', '>=', $date . ' ' . $j . ':00:00')
+                ->where('alarm_start_datetime', '<=', $date  . ' ' . $j . ':59:59')
+                ->count();
 
             $modelBattery = AlarmDeviceSensorLogs::where('company_id', $company_id)
-
 
                 ->where('log_time', '>=', $date . ' ' . $j . ':00:00')
                 ->where('log_time', '<=', $date  . ' ' . $j . ':59:59')
@@ -417,11 +417,10 @@ class DeviceSensorLogsController extends Controller
 
 
 
-        $logs = AlarmDeviceSensorLogs::with(["device.category"])
+        $logs = DevicesAlarmLogs::with(["device.category"])
             ->where('company_id', $request->company_id)
-            ->where('log_time', '>=', $request->date_from . ' 00:00:00')
-            ->where('log_time', '<=', $request->date_to . ' 23:59:59')
-            ->where('alarm_status', 1)
+            ->where('alarm_start_datetime', '>=', $request->date_from . ' 00:00:00')
+            ->where('alarm_start_datetime', '<=', $request->date_to . ' 23:59:59')
             ->get();
 
         // Group logs by category name
@@ -455,10 +454,10 @@ class DeviceSensorLogsController extends Controller
 
 
 
-        $alarmCount = AlarmDeviceSensorLogs::where('company_id', $request->company_id)
-            ->where('log_time', '>=', $request->date_from . ' 00:00:00')
-            ->where('log_time', '<=', $request->date_to  .  ' 23:59:59')
-            ->where('alarm_status', 1)->count();
+        $alarmCount = DevicesAlarmLogs::where('company_id', $request->company_id)
+            ->where('alarm_start_datetime', '>=', $request->date_from . ' 00:00:00')
+            ->where('alarm_start_datetime', '<=', $request->date_to  .  ' 23:59:59')
+            ->count();
 
         $batteryCount = AlarmDeviceSensorLogs::where('company_id', $request->company_id)
             ->where('log_time', '>=', $request->date_from . ' 00:00:00')
@@ -466,18 +465,17 @@ class DeviceSensorLogsController extends Controller
             ->where('battery', '<=', 10)->count();
 
 
-        $model = AlarmDeviceSensorLogs::where('company_id', $request->company_id)
-            ->where('log_time', '>=', $request->date_from . ' 00:00:00')
-            ->where('log_time', '<=', $request->date_to  .  ' 23:59:59')
-            ->where('alarm_status', 0)
-            ->where('alarm_status', '!=', null);
+        $model = DevicesAlarmLogs::where('company_id', $request->company_id)
+            ->where('alarm_start_datetime', '>=', $request->date_from . ' 00:00:00')
+            ->where('alarm_start_datetime', '<=', $request->date_to  .  ' 23:59:59')
+            ->where('alarm_end_datetime',  "!=", null);
         $avgResponse = $model->clone()
             ->avg("response_minutes");
 
         $fastestResponse = $model->clone()
-            ->max("response_minutes");
-        $slowestResponse = $model->clone()
             ->min("response_minutes");
+        $slowestResponse = $model->clone()
+            ->max("response_minutes");
 
         $finalarray  = [
             "totalCount" => $batteryCount + $alarmCount,
