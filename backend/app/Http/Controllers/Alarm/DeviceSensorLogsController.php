@@ -430,6 +430,7 @@ class DeviceSensorLogsController extends Controller
             ->where('company_id', $request->company_id)
             ->where('alarm_start_datetime', '>=', $request->date_from . ' 00:00:00')
             ->where('alarm_start_datetime', '<=', $request->date_to . ' 23:59:59')
+
             ->get();
 
         // Group logs by category name

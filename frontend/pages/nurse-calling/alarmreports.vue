@@ -113,7 +113,7 @@
               {{ item.device.name }}
             </template>
             <template v-slot:item.category="{ item }">
-              {{ item.device.category.name }}
+              {{ item.device.category?.name }}
             </template>
             <template v-slot:item.location="{ item }">
               {{ item.device.location }}
