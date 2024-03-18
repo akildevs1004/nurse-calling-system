@@ -1,15 +1,11 @@
 <template>
   <div style="padding: 0px; width: 100%; height: auto">
-    <v-row>
-      <v-col cols="6" class="text-right"></v-col>
-      <v-col cols="6" class="text-right"> </v-col>
-    </v-row>
-
-    <v-row>
-      <v-col cols="5">
+    <v-row class="pt-0">
+      <v-col cols="6" class="text-right pt-0"></v-col>
+      <v-col cols="6" class="text-right">
         <v-select
           @change="applyFilter()"
-          class="pt-10 px-2"
+          class="pt-0 px-2"
           v-model="filter1"
           :items="[
             { id: `categories`, name: `Categories` },
@@ -21,10 +17,13 @@
           item-text="name"
           label="Categories/Devices"
         >
-        </v-select>
-      </v-col>
-      <v-col cols="7">
-        <div id="visitors" name="visitors" style="width: 100%"></div>
+        </v-select
+      ></v-col>
+    </v-row>
+
+    <v-row>
+      <v-col cols="12" class="text-center">
+        <div id="visitors" name="visitors" style="width: 70%"></div>
       </v-col>
     </v-row>
 

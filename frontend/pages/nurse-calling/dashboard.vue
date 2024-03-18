@@ -273,8 +273,12 @@
         </v-card> -->
       </v-col>
       <v-col cols="4">
-        <v-card ref="AlamDashboardPieChartDiv" style="height: 520px">
-          <v-card-text>
+        <v-card
+          class="pa-0"
+          ref="AlamDashboardPieChartDiv"
+          style="height: 520px"
+        >
+          <v-card-text class="pt-0">
             <AlamDashboardPieChart
               v-if="keyChart2 > 0"
               :name="'AlamDashboardPieChart'"

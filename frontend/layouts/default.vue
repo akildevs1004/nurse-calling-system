@@ -259,10 +259,10 @@
       <span style="font-size: 30px; color: #fff">
         <div>
           <span style="color: #fff; font-size: 30px"> {{ currentTime }}</span>
-          <v-divider vertical style="color: #fff"></v-divider>
+          <!-- <v-divider vertical style="color: #fff"></v-divider>
           <span style="font-size: 30px; color: #fff">{{
             $dateFormat.format21(currentDate)
-          }}</span>
+          }}</span> -->
         </div>
       </span>
 

@@ -120,7 +120,7 @@
             <v-card-text class="text-center">
               <div
                 v-if="device.battery_level <= 50"
-                style="left: 44px; position: absolute; top: 116px"
+                style="left: 10px; position: absolute; top: 116px"
               >
                 <img style="width: 50px" :src="getWarningImage(device)" />
                 <br />
@@ -128,13 +128,17 @@
                 <!-- <v-icon>mdi mdi-battery-alert</v-icon> -->
               </div>
 
-              <img
+              <!-- <img
                 :src="getImage(device)"
                 :style="
                   'max-height:175px;max-width:100%;;width: ' +
                   boxImageWidth +
                   '%'
                 "
+              /> -->
+              <img
+                :src="getImage(device)"
+                :style="'max-height:175px;max-width:100%;;width:  150px;height:150px'"
               />
             </v-card-text>
           </v-card>
