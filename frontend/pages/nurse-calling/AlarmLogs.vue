@@ -123,7 +123,7 @@
               {{ item.log_time }}
             </template>
             <template v-slot:item.category="{ item }">
-              {{ item.device.category.name }}
+              {{ item.device.category?.name }}
             </template>
             <template v-slot:item.battery_level="{ item }">
               <div v-if="item.battery <= 10" :style="'color:red'">
