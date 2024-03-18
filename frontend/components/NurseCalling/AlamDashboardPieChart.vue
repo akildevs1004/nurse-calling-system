@@ -23,7 +23,7 @@
 
     <v-row>
       <v-col cols="12" class="text-center">
-        <div id="visitors" name="visitors" style="width: 70%"></div>
+        <div id="visitors" name="visitors" style="width: 300px"></div>
       </v-col>
     </v-row>
 
