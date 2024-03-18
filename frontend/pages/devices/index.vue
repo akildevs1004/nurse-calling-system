@@ -606,6 +606,21 @@
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-row class="ma-1">
           <v-col md="12">
+            <v-select
+              v-model="payload.branch_id"
+              :items="branchesList"
+              dense
+              placeholder="Select Branch"
+              outlined
+              item-value="id"
+              item-text="branch_name"
+              label="Branch"
+            >
+            </v-select>
+          </v-col>
+        </v-row>
+        <v-row class="ma-1">
+          <v-col md="12">
             <v-text-field
               :hide-details="!payload.name"
               v-model="payload.name"

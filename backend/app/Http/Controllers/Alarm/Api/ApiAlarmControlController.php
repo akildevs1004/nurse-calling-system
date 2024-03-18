@@ -319,14 +319,14 @@ class ApiAlarmControlController extends Controller
 
 
 
-                    if (!$exist) {
-                        $message[] =  $this->SendWhatsappNotification("Batery Level is 0",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+                    //if (!$exist) {
+                    $message[] =  $this->SendWhatsappNotification("Batery Level is 0",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
 
-                        $row = [];
-                        $row["battery_level"] = $battery;
+                    $row = [];
+                    $row["battery_level"] = $battery;
 
-                        $deviceModel->clone()->where("battery_level", '!=', 0)->update($row);
-                    }
+                    $deviceModel->clone()->where("battery_level", '!=', 0)->update($row);
+                    // }
                 } else if ($battery > 0) {
                     $row = [];
                     $row["battery_level"] = $battery;
@@ -337,29 +337,29 @@ class ApiAlarmControlController extends Controller
                 if ($alarm_status == 1) {
 
                     $exist = $deviceModel->clone()->where("alarm_status",   1)->exists();
-                    if (!$exist) {
-                        $message[] =  $this->SendWhatsappNotification("Alarm Triggered ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+                    //if (!$exist) {
+                    $message[] =  $this->SendWhatsappNotification("Alarm Triggered ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
 
 
 
-                        $row = [];
-                        $row["alarm_status"] = $alarm_status;
-                        $row["alarm_start_datetime"] = $log_time;
-                        $row["alarm_end_datetime"] = null;
-                        $deviceModel->clone()->update($row);
-                    }
+                    $row = [];
+                    $row["alarm_status"] = $alarm_status;
+                    $row["alarm_start_datetime"] = $log_time;
+                    $row["alarm_end_datetime"] = null;
+                    $deviceModel->clone()->update($row);
+                    // }
                 } else if ($alarm_status == 0) {
 
-                    $exist = $deviceModel->clone()->where("alarm_status",   0)->exists();
-                    if (!$exist) {
+                    // $exist = $deviceModel->clone()->where("alarm_status",   0)->exists();
+                    // if (!$exist) {
 
-                        $message[] =  $this->SendWhatsappNotification("Alarm Stopped ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
-                        $row = [];
-                        $row["alarm_status"] = $alarm_status;
-                        $row["alarm_end_datetime"] = $log_time;
+                    $message[] =  $this->SendWhatsappNotification("Alarm Stopped ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+                    $row = [];
+                    $row["alarm_status"] = $alarm_status;
+                    $row["alarm_end_datetime"] = $log_time;
 
-                        $deviceModel->clone()->where("alarm_status", 1)->update($row);
-                    }
+                    $deviceModel->clone()->where("alarm_status", 1)->update($row);
+                    //}
 
                     // //avg response 
 
@@ -393,7 +393,7 @@ class ApiAlarmControlController extends Controller
 
 
 
-                return $this->response('Successfully Updated', null, true);
+                return $this->response('Successfully Updated', $message, true);
             }
         } catch (\Exception $e) {
             Storage::append("logs/nurse-calling-system/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode([$device_serial_number, $alarm_status, $battery]) . ' \n' . $e->getMessage());
@@ -629,6 +629,7 @@ class ApiAlarmControlController extends Controller
 
             // try {
 
+
             $model = ReportNotification::with(["managers.branch",  "company.company_mail_content"])->where("id", $id)
 
 
@@ -645,38 +646,60 @@ class ApiAlarmControlController extends Controller
 
 
                     foreach ($model->managers as $key => $value) {
+                        $minutesDifference = 1000;
 
-                        $branch_name = $value->branch->branch_name;
+                        //wait 5 minutes to send notification
+                        $notificationSentLogs = ReportNotificationLogs::where("notification_id", $value->notification_id)
+                            ->where("notification_manager_id", $value->id)
+                            ->where("email", $value->email)
+                            ->orderBy("created_at", "DESC")->first();
 
-                        $body_content1 = "📊 *{$issue} Notification <br/>";
+                        if ($notificationSentLogs) {
+                            $datetime1 = new DateTime(date("Y-m-d H:i"));
+                            $datetime2 = new DateTime($notificationSentLogs["created_at"]);
 
-                        $body_content1 = " Hello, {$value->name} <br/>";
-                        $body_content1 .= " Company:  {$model->company->name}<br/>";
-                        $body_content1 .= "This is Notifing you about {$issue} status <br/>";
-                        $body_content1 .= "Date:  $date<br/>";
-                        $body_content1 .= "Room Name: {$room_name}<br/>";
-                        $body_content1 .= "Branch: {$branch_name}<br/><br/><br/><br/>";
-                        $body_content1 .= "*Xtreme Guard*<br/>";
-
-                        $data = [
-                            'subject' => "{$issue} Notification - {$date}",
-                            'body' => $body_content1,
-                        ];
+                            $interval = $datetime1->diff($datetime2);
+                            $minutesDifference =  $interval->i + ($interval->h * 60) + ($interval->days * 1440);
+                        }
 
 
-
-                        $body_content1 = new EmailContentDefault($data);
-
-                        if ($value->email != '') {
-                            Mail::to($value->email)
-                                ->send($body_content1);
-
-
-                            $data = ["company_id" => $value->company_id, "branch_id" => $value->branch_id, "notification_id" => $value->notification_id, "notification_manager_id" => $value->id, "email" => $value->email];
+                        if ($minutesDifference >   5) { // 
 
 
 
-                            ReportNotificationLogs::create($data);
+
+                            $branch_name = $value->branch->branch_name;
+
+                            $body_content1 = "📊 *{$issue} Notification <br/>";
+
+                            $body_content1 = " Hello, {$value->name} <br/>";
+                            $body_content1 .= " Company:  {$model->company->name}<br/>";
+                            $body_content1 .= "This is Notifing you about {$issue} status <br/>";
+                            $body_content1 .= "Date:  $date<br/>";
+                            $body_content1 .= "Room Name: {$room_name}<br/>";
+                            $body_content1 .= "Branch: {$branch_name}<br/><br/><br/><br/>";
+                            $body_content1 .= "*Xtreme Guard*<br/>";
+
+                            $data = [
+                                'subject' => "{$issue} Notification - {$date}",
+                                'body' => $body_content1,
+                            ];
+
+
+
+                            $body_content1 = new EmailContentDefault($data);
+
+                            if ($value->email != '') {
+                                Mail::to($value->email)
+                                    ->send($body_content1);
+
+
+                                $data = ["company_id" => $value->company_id, "branch_id" => $value->branch_id, "notification_id" => $value->notification_id, "notification_manager_id" => $value->id, "email" => $value->email];
+
+
+
+                                ReportNotificationLogs::create($data);
+                            }
                         }
                     }
                 } else {
@@ -687,38 +710,59 @@ class ApiAlarmControlController extends Controller
             if (in_array("Whatsapp", $model->mediums)) {
 
                 foreach ($model->managers as $key => $manager) {
-
-                    if ($manager->whatsapp_number != '') {
-
-
-                        $body_content1 = "📊 *{$issue} Notification* 📊\n\n";
-
-                        $body_content1 = "*Hello, {$manager->name}*\n\n";
-                        $body_content1 .= "*Company:  {$model->company->name}*\n\n";
-                        $body_content1 .= "This is Notifing you about {$issue} status \n\n";
-                        $body_content1 .= "Date:  $date\n\n";
-                        $body_content1 .= "Room Name:  {$room_name}\n\n";
-                        $body_content1 .= "Branch:  {$room_name}\n\n";
-                        $body_content1 .= "Branch:  {$branch_name}\n\n";
-                        $body_content1 .= "*Xtreme Guard*\n";
-
+                    $minutesDifference = 1000; //minutes
+                    //wait 5 minutes to send notification
+                    $notificationSentLogs = ReportNotificationLogs::where("notification_id", $manager->notification_id)
+                        ->where("notification_manager_id", $manager->id)
+                        ->where("whatsapp_number", $manager->whatsapp_number)
+                        ->orderBy("created_at", "DESC")->first();
+                    $minutesDifference = 1000; //minutes
+                    if ($notificationSentLogs) {
+                        $datetime1 = new DateTime(date("Y-m-d H:i"));
+                        $datetime2 = new DateTime($notificationSentLogs["created_at"]);
+                        $interval = $datetime1->diff($datetime2);
+                        $minutesDifference =  $interval->i + ($interval->h * 60) + ($interval->days * 1440);
+                    }
 
 
 
-                        if (count($model->company->company_whatsapp_content))
-                            $body_content1 .= $model->company->company_whatsapp_content[0]->content;
+                    if ($minutesDifference >  5) { // 
 
-                        (new WhatsappController())->sendWhatsappNotification($model->company, $body_content1, $manager->whatsapp_number, []);
 
-                        $data = [
-                            "company_id" => $model->company->id,
-                            "branch_id" => $manager->branch_id,
-                            "notification_id" => $manager->notification_id,
-                            "notification_manager_id" => $manager->id,
-                            "whatsapp_number" => $manager->whatsapp_number
-                        ];
+                        $branch_name = $manager->branch->branch_name;
 
-                        ReportNotificationLogs::create($data);
+                        if ($manager->whatsapp_number != '') {
+
+
+                            $body_content1 = "📊 *{$issue} Notification* 📊\n\n";
+
+                            $body_content1 = "*Hello, {$manager->name}*\n\n";
+                            $body_content1 .= "*Company:  {$model->company->name}*\n\n";
+                            $body_content1 .= "This is Notifing you about {$issue} status \n\n";
+                            $body_content1 .= "Date:  $date\n\n";
+                            $body_content1 .= "Room Name:  {$room_name}\n\n";
+                            $body_content1 .= "Branch:  {$room_name}\n\n";
+                            $body_content1 .= "Branch:  {$branch_name}\n\n";
+                            $body_content1 .= "*Xtreme Guard*\n";
+
+
+
+
+                            if (count($model->company->company_whatsapp_content))
+                                $body_content1 .= $model->company->company_whatsapp_content[0]->content;
+
+                            (new WhatsappController())->sendWhatsappNotification($model->company, $body_content1, $manager->whatsapp_number, []);
+
+                            $data = [
+                                "company_id" => $model->company->id,
+                                "branch_id" => $manager->branch_id,
+                                "notification_id" => $manager->notification_id,
+                                "notification_manager_id" => $manager->id,
+                                "whatsapp_number" => $manager->whatsapp_number
+                            ];
+
+                            ReportNotificationLogs::create($data);
+                        }
                     }
                 }
             }
