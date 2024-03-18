@@ -87,6 +87,7 @@ class ApiAlarmControlController extends Controller
                     ->where("time_gap_seconds", "!=", null)
                     ->where("time_gap_seconds", '>', 30)
                     ->where("log_time", '>',  $alarmData['alarm_start_datetime'])
+                    // ->where("log_time", '<=', date("Y-m-d H:i:s", strtotime("-30 seconds")))  //wait for 1 minute to close the Alram 
                     ->orderBy("log_time", "DESC")
 
                     ->first();
@@ -131,7 +132,7 @@ class ApiAlarmControlController extends Controller
 
                     $interval = $datetime1->diff($datetime2);
                     $secondsDifference = $interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400);
-                    if ($secondsDifference > 30) {
+                    if ($secondsDifference > 70) { //as per cron job have to wait 1 minute
 
                         $datetime1 = new DateTime($logs['log_time']);
                         $datetime2 = new DateTime($alarmData["alarm_start_datetime"]);
@@ -211,6 +212,8 @@ class ApiAlarmControlController extends Controller
     public function updateDuration($devicesList)
     {
 
+
+
         foreach ($devicesList as $key => $device) {
 
 
@@ -224,10 +227,29 @@ class ApiAlarmControlController extends Controller
             for ($i = 0; $i < count($data); $i++) {
 
                 $currentLog = $data[$i];
-                $previousLogTime = isset($data[$i + 1]) ? $data[$i + 1]['log_time'] : date("Y-m-d H:i:0", strtotime("-60 minutes"));
+                //$previousLogTime = isset($data[$i + 1]) ? $data[$i + 1]['log_time'] : date("Y-m-d H:i:0", strtotime("-10 minutes"));
                 //$previousLogTime = isset($data[$i + 1]) ? $data[$i + 1]['log_time'] : false;
+                $previousLogTime = false;
+                if (isset($data[$i + 1])) {
+                    $previousLogTime =   $data[$i + 1]['log_time'];
+                } else {
+                    $fisrtRecord = DeviceSensorLogs::where("serial_number", $device['serial_number'])
+                        ->where("company_id", '>', 0)
+                        ->orderBy("log_time", "ASC")
+                        ->first();
 
+                    if ($fisrtRecord["id"] == $currentLog["id"]) {
+                        $previousLogTime = date("Y-m-d H:i:0", strtotime("-10 minutes"));
+                    } else {
 
+                        $previousRecord = DeviceSensorLogs::where("serial_number", $device['serial_number'])
+                            ->where("company_id", '>', 0)
+                            ->where("id", "<", $currentLog["id"])
+                            ->orderBy("log_time", "DESC")
+                            ->first();
+                        $previousLogTime = $previousRecord["log_time"];
+                    }
+                }
                 if ($previousLogTime) {
 
                     $latestLogTime = $currentLog['log_time'];
