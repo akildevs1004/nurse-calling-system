@@ -1,8 +1,8 @@
 <template>
   <div style="padding: 0px; width: 100%; height: auto">
-    <v-row class="pt-0">
-      <v-col cols="6" class="text-right pt-0"></v-col>
-      <v-col cols="6" class="text-right">
+    <v-row class="pt-0 pb-0">
+      <v-col cols="6" class="text-right pb-0"></v-col>
+      <v-col cols="6" class="text-right pb-0">
         <v-select
           @change="applyFilter()"
           class="pt-0 px-2"
@@ -21,9 +21,13 @@
       ></v-col>
     </v-row>
 
-    <v-row>
-      <v-col cols="12" class="text-center">
-        <div id="visitors" name="visitors" style="width: 300px"></div>
+    <v-row class="pt-0 mt-0">
+      <v-col cols="12" class="text-center pt-0">
+        <div
+          id="visitors"
+          name="visitors"
+          style="width: 300px; margin: 0 auto; text-align: center"
+        ></div>
       </v-col>
     </v-row>
 
@@ -40,13 +44,13 @@
     >
       No Data available
     </div>
-    <div style="height: 190px">
+    <div>
       <v-row class="bold" style="height: auto">
         <v-col cols="1">#</v-col>
         <v-col cols="6">Category</v-col>
         <v-col cols="5">Alarm Events count</v-col>
       </v-row>
-      <div style="height: 180px; overflow-y: scroll; overflow-x: hidden">
+      <div style="height: 160px; overflow-y: scroll; overflow-x: hidden">
         <v-row v-for="(category, index) in categories">
           <v-col cols="1">{{ index + 1 }}</v-col>
           <v-col cols="7"
@@ -82,6 +86,7 @@ export default {
           offsetX: 0,
           offsetY: 0,
         },
+
         title: {
           //text: "Alarm Events - Categories",
           align: "left",
@@ -170,7 +175,7 @@ export default {
           },
         },
         legend: {
-          show: true,
+          show: false,
           fontSize: "10px",
         },
         responsive: [
