@@ -183,7 +183,7 @@ class DeviceController extends Controller
 
             $model = Device::query();
             $model->where("company_id", $request->company_id);
-            $model->where("device_id", $request->device_id);
+            $model->where("serial_number", $request->serial_number);
             $model->where("name", $request->name);
 
             if ($model->exists()) {
@@ -197,9 +197,9 @@ class DeviceController extends Controller
                 $data["device_type"] = "---";
             }
 
-
-            $data["ip"] = "0.0.0.0";
-            $data["port"] = "0000";
+            $data["status_id"] = 1;
+            // $data["ip"] = "0.0.0.0";
+            // $data["port"] = "0000";
             $record = $model->create($data);
             $this->updateDevicesJson();
             if ($record) {

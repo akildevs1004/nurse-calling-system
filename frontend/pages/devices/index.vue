@@ -743,9 +743,9 @@
       <v-tab>
         <span>Categories</span>
       </v-tab>
-      <v-tab>
+      <!--<v-tab>
         <span>Colors</span>
-      </v-tab>
+      </v-tab>-->
 
       <v-tab-item>
         <v-card flat>

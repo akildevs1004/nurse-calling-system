@@ -1,5 +1,26 @@
 <template>
   <div style="padding: 0px; width: 100%; height: auto">
+    <v-row>
+      <v-col cols="6" class="text-right"></v-col>
+      <v-col cols="6" class="text-right">
+        <v-select
+          @change="applyFilter()"
+          class="pt-10 px-2"
+          v-model="filter1"
+          :items="[
+            { id: `categories`, name: `Categories` },
+            { id: `devices`, name: `Devices` },
+          ]"
+          dense
+          outlined
+          item-value="id"
+          item-text="name"
+          label="Categories/Devices"
+        >
+        </v-select>
+      </v-col>
+    </v-row>
+
     <div id="visitors" name="visitors" :height="height" width="250"></div>
     <div
       v-if="categories.length == 0"
@@ -42,6 +63,7 @@ export default {
       //     { title: "Title4", value: 50 },
       //   ],
       totalCount: 0,
+      filter1: "categories",
       categories: [],
       options: {
         noData: {
@@ -138,24 +160,52 @@ export default {
     };
   },
   mounted() {
-    let options = {
-      params: {
-        per_page: 1000,
-        company_id: this.$auth.user.company_id,
-
-        date_from: this.date_from,
-        date_to: this.date_to,
-      },
-    };
-
-    this.$axios
-      .get(`/alarm_dashboard_get_categories_data`, options)
-      .then(({ data }) => {
-        this.categories = data;
-        this.renderChart1(data);
-      });
+    this.loadCategoriesStatistics();
   },
   methods: {
+    applyFilter() {
+      if (this.filter1 == "categories") {
+        this.loadCategoriesStatistics();
+      } else if (this.filter1 == "devices") {
+        this.loadDevicesStatistics();
+      }
+    },
+    loadDevicesStatistics() {
+      let options = {
+        params: {
+          per_page: 1000,
+          company_id: this.$auth.user.company_id,
+
+          date_from: this.date_from,
+          date_to: this.date_to,
+        },
+      };
+
+      this.$axios
+        .get(`/alarm_dashboard_get_devices_data`, options)
+        .then(({ data }) => {
+          this.categories = data;
+          this.renderChart1(data);
+        });
+    },
+    loadCategoriesStatistics() {
+      let options = {
+        params: {
+          per_page: 1000,
+          company_id: this.$auth.user.company_id,
+
+          date_from: this.date_from,
+          date_to: this.date_to,
+        },
+      };
+
+      this.$axios
+        .get(`/alarm_dashboard_get_categories_data`, options)
+        .then(({ data }) => {
+          this.categories = data;
+          this.renderChart1(data);
+        });
+    },
     renderChart1(data) {
       let counter = 0;
       let total = 0;

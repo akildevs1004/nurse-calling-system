@@ -388,22 +388,29 @@ class DeviceSensorLogsController extends Controller
 
 
 
-        $logs = AlarmDeviceSensorLogs::with(["device.category"])
+        $logs = DevicesAlarmLogs::with(["device.category"])
             ->where('company_id', $request->company_id)
-            ->where('log_time', '>=', $request->date_from . ' 00:00:00')
-            ->where('log_time', '<=', $request->date_to . ' 23:59:59')
-            ->where('alarm_status', 1)
-            ->get()->groupBy('serial_number');
+            ->where('alarm_start_datetime', '>=', $request->date_from . ' 00:00:00')
+            ->where('alarm_start_datetime', '<=', $request->date_to . ' 23:59:59')
 
+            ->get();
 
+        // Group logs by category name
+        $countByDevice = $logs->groupBy('device.name')
+            ->map(function ($group) {
+                return $group->count();
+            });
+
+        // Fetch all categories
+        $Devices = Device::get();
 
         // Initialize data array
         $data = [];
 
         // Loop through categories and populate data array with counts
-        foreach ($logs as  $device => $category) {
-            $categoryName = $device;
-            $count = count($category);
+        foreach ($Devices as $device) {
+            $categoryName = $device->name;
+            $count = $countByDevice->has($categoryName) ? $countByDevice[$categoryName] : 0;
             $data[] = ["category" => $categoryName, "count" => $count];
         }
         usort($data, function ($a, $b) {

@@ -30,10 +30,10 @@ class StoreRequest extends FormRequest
         $companyId = $this->company_id;
         return [
 
-            'device_id' => [
+            'serial_number' => [
                 'required',
                 Rule::unique('devices')->where(function ($query) use ($deviceId, $companyId) {
-                    return $query->where('device_id', $deviceId)
+                    return $query->where('serial_number', $deviceId)
                         ->where('company_id', $companyId);
                 }),
 
@@ -44,14 +44,14 @@ class StoreRequest extends FormRequest
             // 'device_id' => ['required', 'min:3', 'max:100', 'unique:devices'],
             'location' => ['nullable', 'min:2', 'max:300'],
             'company_id' => ['required', 'min:1', 'integer'],
-            'status_id' => ['required', 'min:1', 'integer'],
+            //'status_id' => ['required', 'min:1', 'integer'],
 
             'model_number' => ['nullable', 'min:4', 'max:20'],
             'device_type' => ['nullable'],
 
             'mode' => ['nullable'],
 
-            'ip' => 'required|ip',
+            //'ip' => 'required|ip',
             'function' => 'nullable',
             'utc_time_zone' => 'required',
             'branch_id' => 'nullable',

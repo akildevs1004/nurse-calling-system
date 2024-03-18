@@ -251,24 +251,32 @@
     </v-row>
     <v-row>
       <v-col cols="8">
+        <!-- {{ AlarmDashboardHourlyChartheight }} -->
         <!--  :height="AlarmDashboardHourlyChartheight"-->
         <v-card>
           <v-card-text>
-            <AlarmDashboardHourlyChart
-              :name="'AlarmDashboardHourlyChart'"
-              :height="'800px'"
-              :key="keyChart3"
-              :date_from="date_from"
-              :date_to="date_to"
-          /></v-card-text>
+            <div>
+              <AlarmDashboardHourlyChart
+                :name="'AlarmDashboardHourlyChart'"
+                :height="'400px'"
+                :key="keyChart3"
+                :date_from="date_from"
+                :date_to="date_to"
+              />
+            </div>
+          </v-card-text>
         </v-card>
+        <!-- <div :height="AlarmDashboardHourlyChartheight"></div> -->
+        <!-- <v-card style="height: 200px">
+          <v-card-text> </v-card-text>
+        </v-card> -->
       </v-col>
       <v-col cols="4">
         <v-card ref="AlamDashboardPieChartDiv">
           <v-card-text>
             <AlamDashboardPieChart
               :name="'AlamDashboardPieChart'"
-              :height="'600px'"
+              :height="'400px'"
               :key="keyChart2"
               :date_from="date_from"
               :date_to="date_to"
@@ -295,7 +303,7 @@ export default {
   },
   data() {
     return {
-      AlarmDashboardHourlyChartheight: 700,
+      AlarmDashboardHourlyChartheight: 0,
       device_serial_number: "",
       keyChart2: 0,
       keyChart3: 0,
@@ -342,9 +350,9 @@ export default {
           );
           let height = this.$refs.AlamDashboardPieChartDiv.$el.clientHeight;
           console.log("height", height);
-          this.AlarmDashboardHourlyChartheight = height;
+          this.AlarmDashboardHourlyChartheight = height - 100;
 
-          this.keyChart3++;
+          //this.keyChart3++;
         }
       }, 4000);
     },

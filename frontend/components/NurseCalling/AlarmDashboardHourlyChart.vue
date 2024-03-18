@@ -30,7 +30,12 @@
       </v-col> -->
     </v-row>
 
-    <div :id="name" style="width: 100%" :key="display_title"></div>
+    <div
+      :id="name"
+      style="width: 100%"
+      :height="height"
+      :key="display_title"
+    ></div>
   </div>
 </template>
 
