@@ -41,6 +41,8 @@ class DeviceSensorLogsController extends Controller
         if ($request->filled("to_date")) {
             $model->whereDate("alarm_end_datetime", '<=', $request->to_date);
         }
+
+        $model->Orwhere("alarm_end_datetime", null);
         // if ($request->filled("filter_alarm_status")) {
 
         //     $model->where(function ($query) use ($request) {
@@ -354,7 +356,7 @@ class DeviceSensorLogsController extends Controller
             $j = $i <= 9 ? "0" . $i : $i;
 
             // $date = date('Y-m-d'); //, strtotime(date('Y-m-d') . '-' . $i . ' days'));
-            $model = Device::where('company_id', $company_id)
+            $model = DevicesAlarmLogs::where('company_id', $company_id)
 
 
                 ->where('alarm_start_datetime', '>=', $date . ' ' . $j . ':00:00')

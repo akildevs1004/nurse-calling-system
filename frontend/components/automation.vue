@@ -203,7 +203,7 @@
         dense
         outlined
         v-model="item.whatsapp_number"
-        label="Whatsapp Number"
+        label="Whatsapp Number(97155****)"
       ></v-text-field>
 
       <v-row>

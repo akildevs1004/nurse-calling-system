@@ -316,6 +316,10 @@ export default {
   watch: {},
   mounted() {
     //this.adjustGraphHeight();
+
+    setInterval(() => {
+      this.getDataFromApi();
+    }, 1000 * 30);
   },
   created() {
     // Get today's date

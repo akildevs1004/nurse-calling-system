@@ -1036,7 +1036,6 @@ export default {
         this.setSubLeftMenuItems("dashboard", to.fullPath);
       }
 
-      console.log("to.name", to.name);
       this.displayDeviceCategories = to.name == "monitor-id" ? true : false;
 
       if (to.name == "monitor-id" || to.name == "nurse-calling-dashboard") {
