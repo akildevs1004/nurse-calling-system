@@ -223,6 +223,7 @@ export default {
     },
   },
   mounted() {
+    let reloadCount = 0;
     // setInterval(() => {
     //   const now = new Date();
     //   this.currentTime = now.toLocaleTimeString([], { hour12: false });
@@ -231,6 +232,11 @@ export default {
     setInterval(() => {
       this.getDataFromApi();
     }, 1000 * 30);
+
+    setTimeout(() => {
+      console.log("reloadCount", reloadCount++);
+      window.location.reload();
+    }, 1000 * 60 * 15);
 
     let boxesPerRow = 4;
 
