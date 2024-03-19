@@ -46,7 +46,11 @@ Route::get("/testpath", function (Request $request) {
 Route::get('/test/getSensorLogs', function (Request $request) {
 
 
-    return DeviceSensorLogs::orderBy("log_time", "DESC")->limit(100)->get(["id", "serial_number", "log_time"]);;
+    $data = DeviceSensorLogs::orderBy("log_time", "DESC")->limit(100)->get(["id", "serial_number", "log_time"]);;
+
+    foreach ($data as $log) {
+        echo '#: ' . $log["id"] . '-' .  ' serial_number: ' . $log["serial_number"] . ' - Time: ' . $log["log_time"] . '<br/>';
+    }
 });
 Route::get('/test/getLogs', function (Request $request) {
 
