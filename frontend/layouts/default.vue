@@ -189,7 +189,7 @@
         />
       </span>
       <v-row v-if="displayDeviceCategories">
-        <v-col style="">
+        <v-col style="" cols="12">
           <v-bottom-navigation
             :value="topMenu"
             style="width: 80%; box-shadow: none; background: transparent"
@@ -217,7 +217,15 @@
         </v-col>
       </v-row>
       <v-spacer></v-spacer>
-
+      <span style="font-size: 30px; color: #fff">
+        <div>
+          <span style="color: #fff; font-size: 30px"> {{ currentTime }}</span>
+          <!-- <v-divider vertical style="color: #fff"></v-divider>
+          <span style="font-size: 30px; color: #fff">{{
+            $dateFormat.format21(currentDate)
+          }}</span> -->
+        </div>
+      </span>
       <!-- <span style="width: 100%; display: none">
         <template
           v-if="
@@ -260,15 +268,6 @@
       </v-card> -->
 
       <v-spacer></v-spacer>
-      <span style="font-size: 30px; color: #fff">
-        <div>
-          <span style="color: #fff; font-size: 30px"> {{ currentTime }}</span>
-          <!-- <v-divider vertical style="color: #fff"></v-divider>
-          <span style="font-size: 30px; color: #fff">{{
-            $dateFormat.format21(currentDate)
-          }}</span> -->
-        </div>
-      </span>
 
       <v-menu
         nudge-bottom="50"
@@ -320,7 +319,7 @@
       <!-- <button type="button" @click="playAudioOnUserInteraction" ref="myBtn">
         Click Me!
       </button> -->
-      <v-btn
+      <!-- <v-btn
         v-if="getLoginType == 'company' || getLoginType == 'branch'"
         icon
         plan
@@ -331,7 +330,7 @@
           style="text-align: center; color: #fff !important"
           >mdi-view-dashboard</v-icon
         ></v-btn
-      >
+      > -->
       <v-btn
         v-if="getLoginType == 'company' || getLoginType == 'branch'"
         icon
@@ -949,7 +948,7 @@ export default {
     };
   },
   created() {
-    console.log("this.$route.name", this.$route.name);
+    //console.log("this.$route.name", this.$route.name);
     if (this.$route.name != "monitor-id") this.displayDeviceCategories = false;
 
     this.drawer =
@@ -1023,7 +1022,7 @@ export default {
       }
     }
     this.setupInactivityDetection();
-    console.log("this.$route.name", this.$route.name);
+    // console.log("this.$route.name", this.$route.name);
     this.drawer =
       this.$route.name == ("monitor-id" || "nurse-calling-dashboard")
         ? false
@@ -1236,7 +1235,7 @@ export default {
       // Handle inactivity
       this.handleInactivity = () => {
         // Perform actions when the user is inactive
-        this.$router.push(`/dashboard2`);
+        ////////////////////this.$router.push(`/dashboard`);
         // For example, you could redirect the user, show a message, etc.
       };
 
@@ -1385,7 +1384,10 @@ export default {
     },
 
     setMenus() {
-      if (this.$auth.user.role.role_type == 0) {
+      if (!this.$auth.user.role) {
+        return "";
+      }
+      if (this.$auth?.user?.role?.role_type == 0) {
         {
           alert("Invalid User Type");
           this.logout();

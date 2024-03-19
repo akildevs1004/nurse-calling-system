@@ -232,7 +232,8 @@ export default {
     setInterval(() => {
       this.getDataFromApi();
     }, 1000 * 30);
-
+    const now = new Date();
+    console.log("reloadCount", now.toLocaleTimeString([], { hour12: false }));
     setTimeout(() => {
       console.log("reloadCount", reloadCount++);
       window.location.reload();
@@ -272,20 +273,30 @@ export default {
     // },
     getHeadBgColor(device) {
       if (this.$auth.user.company)
-        if (device.alarm_status == 0)
-          return this.$auth.user.company.device_normal_top_color ?? "#005947";
-        else if (device.alarm_status == 1)
-          return this.$auth.user.company.device_normal_body_color ?? "#fe0000";
+        if (device.alarm_status == 0) return "#005947";
+        else if (device.alarm_status == 1) return "#fe0000";
+      // if (this.$auth.user.company)
+      //   if (device.alarm_status == 0)
+      //     return this.$auth.user.company.device_normal_top_color ?? "#005947";
+      //   else if (device.alarm_status == 1)
+      //     return this.$auth.user.company.device_alarm_top_color ?? "#fe0000";
     },
     getBodyBgColor(device) {
+      console.log(
+        " this.$auth.user.company.device_normal_body_color",
+        this.$auth.user.company.device_normal_body_color
+      );
       if (this.$auth.user.company)
-        if (device.alarm_status == 0)
-          return (
-            this.$auth.user.company.device_alarm_top_color ?? "#eba50f" //"#d7d7d7"
-          );
-        // "#eba50f";
-        else if (device.alarm_status == 1)
-          return this.$auth.user.company.device_alarm_body_color ?? "#eba50f";
+        return this.$auth.user.company.device_normal_body_color ?? "#eba50f";
+
+      // if (this.$auth.user.company)
+      //   if (device.alarm_status == 0)
+      //     return (
+      //       this.$auth.user.company.device_alarm_top_color ?? "#eba50f" //"#d7d7d7"
+      //     );
+      //   // "#eba50f";
+      //   else if (device.alarm_status == 1)
+      //     return this.$auth.user.company.device_alarm_body_color ?? "#eba50f";
     },
     getImage(device) {
       //let imagename = "normal";

@@ -743,9 +743,9 @@
       <v-tab>
         <span>Categories</span>
       </v-tab>
-      <!--<v-tab>
+      <v-tab>
         <span>Colors</span>
-      </v-tab>-->
+      </v-tab>
 
       <v-tab-item>
         <v-card flat>
@@ -979,8 +979,80 @@
       <v-tab-item>
         <v-card>
           <v-card-text>
+            <!-- <label class="col-form-label">Normal Top Color </label>
+            <v-menu
+              ref="menu"
+              v-model="menu"
+              :close-on-content-click="false"
+              :return-value.sync="payloadDeviceColors.device_normal_body_color"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  class="pb-2"
+                  label="Monthly Date"
+                  :hide-details="payloadDeviceColors.device_normal_body_color"
+                  outlined
+                  dense
+                  v-model="payloadDeviceColors.device_normal_body_color"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-color-picker
+                scrollable
+                v-model="payloadDeviceColors.device_normal_body_color"
+                dot-size="25"
+                swatches-max-height="200"
+                @input="menu = false"
+              >
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="menu = false">
+                  Cancel
+                </v-btn>
+                <v-btn text color="primary" @click="menu = false">
+                  OK
+                </v-btn></v-color-picker
+              >
+            </v-menu> -->
             <v-row>
               <v-col cols="3">
+                <v-select
+                  label="Dashboard Background Color"
+                  v-model="payloadDeviceColors.device_normal_body_color"
+                  :items="[
+                    {
+                      id: `#eba50f`,
+                      name: `Yellow`,
+                    },
+                    {
+                      id: `#d7d7d7`,
+                      name: `White`,
+                    },
+                  ]"
+                  dense
+                  placeholder="Box Background Color"
+                  outlined
+                  :hide-details="true"
+                  item-text="name"
+                  item-value="id"
+                ></v-select>
+                <br />
+                <div class="text-right">
+                  <v-btn
+                    dark
+                    small
+                    color="primary"
+                    @click="update_device_setting"
+                  >
+                    Submit
+                  </v-btn>
+                </div>
+              </v-col>
+              <!-- <v-col cols="3">
                 <label class="col-form-label">Normal Top Color </label>
                 <v-text-field
                   dense
@@ -1043,19 +1115,8 @@
                       : ''
                   "
                 ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <div class="text-right">
-                  <v-btn
-                    dark
-                    small
-                    color="primary"
-                    @click="update_device_setting"
-                  >
-                    Submit
-                  </v-btn>
-                </div>
-              </v-col>
+              </v-col> -->
+              <v-col cols="12"> </v-col>
             </v-row>
           </v-card-text>
         </v-card>
@@ -1074,6 +1135,7 @@ export default {
   components: { DeviceAccessSettings, DeviceCategories },
 
   data: () => ({
+    menu: false,
     deviceCategoriesList: [],
     deviceCAMVIISettings: {},
     DialogDeviceMegviiSettings: false,
@@ -1270,15 +1332,15 @@ export default {
   },
   async created() {
     this.payloadDeviceColors.device_normal_top_color =
-      this.$auth.user.company.device_normal_top_color ?? "#11b393";
+      this.$auth.user.company.device_normal_top_color ?? "#005947";
 
     this.payloadDeviceColors.device_normal_body_color =
-      this.$auth.user.company.device_normal_body_color ?? "#11518d";
+      this.$auth.user.company.device_normal_body_color ?? "#eba50f";
 
     this.payloadDeviceColors.device_alarm_top_color =
       this.$auth.user.company.device_alarm_top_color ?? "#fe0000";
     this.payloadDeviceColors.device_alarm_body_color =
-      this.$auth.user.company.device_alarm_body_color ?? "#ffde00";
+      this.$auth.user.company.device_alarm_body_color ?? "#eba50f";
 
     // if (this.$auth.user.company.device_normal_top_color == "") {
     //   this.payloadDeviceColors.device_normal_top_color = "#11b393";
@@ -1955,6 +2017,8 @@ export default {
           } else {
             this.snackbar = true;
             this.response = "Setting updated successfully";
+
+            location.reload();
           }
         })
         .catch((e) => console.log(e));
