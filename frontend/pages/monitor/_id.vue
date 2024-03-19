@@ -266,15 +266,15 @@ export default {
     // },
     getHeadBgColor(device) {
       if (device.alarm_status == 0)
-        return this.$auth.user.company.device_normal_top_color ?? "#11b393";
+        return this.$auth.user.company.device_normal_top_color ?? "#005947";
       else if (device.alarm_status == 1)
         return this.$auth.user.company.device_normal_body_color ?? "#fe0000";
     },
     getBodyBgColor(device) {
       if (device.alarm_status == 0)
-        return this.$auth.user.company.device_alarm_top_color ?? "#ffde00";
+        return this.$auth.user.company.device_alarm_top_color ?? "#eba50f";
       else if (device.alarm_status == 1)
-        return this.$auth.user.company.device_alarm_body_color ?? "#ffde00";
+        return this.$auth.user.company.device_alarm_body_color ?? "#eba50f";
     },
     getImage(device) {
       //let imagename = "normal";
