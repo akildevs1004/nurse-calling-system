@@ -46,7 +46,7 @@ Route::get("/testpath", function (Request $request) {
 Route::get('/test/getSensorLogs', function (Request $request) {
 
 
-    return DeviceSensorLogs::orderBy("log_time", "DESC")->paginate(100);;
+    return DeviceSensorLogs::orderBy("log_time", "DESC")->limit(100)->get(["id", "serial_number", "log_time"]);;
 });
 Route::get('/test/getLogs', function (Request $request) {
 
