@@ -182,13 +182,17 @@
         style="cursor: pointer"
         @click="gotoHomePage()"
       >
-        <img title="Xtream Guard" :src="logo_src" style="width: 150px" />
+        <img
+          title="Xtream Guard"
+          :src="logo_src"
+          style="width: 130px; padding-top: 10px"
+        />
       </span>
       <v-row v-if="displayDeviceCategories">
         <v-col style="">
           <v-bottom-navigation
             :value="topMenu"
-            style="width: 100%; box-shadow: none; background: transparent"
+            style="width: 80%; box-shadow: none; background: transparent"
             elevation="0"
           >
             <v-btn
@@ -205,7 +209,7 @@
               "
               width="auto"
             >
-              <span style="font-size: 20px; color: #fff">{{
+              <span style="font-size: 20px; color: #fff; font-weight: normal">{{
                 device.name
               }}</span>
             </v-btn>
@@ -1070,7 +1074,7 @@ export default {
       return formattedDate;
     },
     changeColor() {
-      return "#16486f";
+      return "#04253b";
       return "#ecf0f4"; //this.$store.state.color;
     },
 
