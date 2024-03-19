@@ -252,6 +252,18 @@ export default {
     this.getDataFromApi();
   },
   methods: {
+    // getHeadBgColor(device) {
+    //   if (device.alarm_status == 0)
+    //     return this.$auth.user.company.device_normal_top_color ?? "#11b393";
+    //   else if (device.alarm_status == 1)
+    //     return this.$auth.user.company.device_normal_body_color ?? "#fe0000";
+    // },
+    // getBodyBgColor(device) {
+    //   if (device.alarm_status == 0)
+    //     return this.$auth.user.company.device_alarm_top_color ?? "#11518d";
+    //   else if (device.alarm_status == 1)
+    //     return this.$auth.user.company.device_alarm_body_color ?? "#ffde00";
+    // },
     getHeadBgColor(device) {
       if (device.alarm_status == 0)
         return this.$auth.user.company.device_normal_top_color ?? "#11b393";
@@ -260,12 +272,13 @@ export default {
     },
     getBodyBgColor(device) {
       if (device.alarm_status == 0)
-        return this.$auth.user.company.device_alarm_top_color ?? "#11518d";
+        return this.$auth.user.company.device_alarm_top_color ?? "#ffde00";
       else if (device.alarm_status == 1)
         return this.$auth.user.company.device_alarm_body_color ?? "#ffde00";
     },
     getImage(device) {
-      let imagename = "normal";
+      //let imagename = "normal";
+      let imagename = "warning";
 
       if (device.alarm_status == 1) imagename = "warning";
       return (
@@ -274,7 +287,9 @@ export default {
         device.category.id +
         "_" +
         imagename +
-        ".png"
+        ".png" +
+        "?t=" +
+        Math.random(1, 2)
       );
     },
     getWarningImage(device) {
@@ -286,7 +301,14 @@ export default {
         imagename = "warning_red";
       }
 
-      return process.env.BACKEND_URL2 + "monitor_icons/" + imagename + ".png";
+      return (
+        process.env.BACKEND_URL2 +
+        "monitor_icons/" +
+        imagename +
+        ".png" +
+        "?t=" +
+        Math.random(1, 2)
+      );
     },
     getHourMinuteDifference(date1) {
       date1 = new Date(date1);
