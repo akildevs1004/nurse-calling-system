@@ -282,10 +282,6 @@ export default {
       //     return this.$auth.user.company.device_alarm_top_color ?? "#fe0000";
     },
     getBodyBgColor(device) {
-      console.log(
-        " this.$auth.user.company.device_normal_body_color",
-        this.$auth.user.company.device_normal_body_color
-      );
       if (this.$auth.user.company)
         return this.$auth.user.company.device_normal_body_color ?? "#eba50f";
 

@@ -456,7 +456,7 @@ class ApiAlarmControlController extends Controller
                         }
 
 
-                        if ($minutesDifference >   15) { // 
+                        if ($minutesDifference >=   15) { // 
 
 
 
@@ -519,7 +519,7 @@ class ApiAlarmControlController extends Controller
 
 
 
-                    if ($minutesDifference >  15) { // 
+                    if ($minutesDifference >=  15) { // 
 
 
                         $branch_name = $manager->branch->branch_name;
