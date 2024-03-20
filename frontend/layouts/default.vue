@@ -219,6 +219,7 @@
       <v-spacer></v-spacer>
       <span style="font-size: 30px; color: #fff">
         <div>
+          <v-icon color="white" size="35">mdi-clock-outline</v-icon>
           <span style="color: #fff; font-size: 30px"> {{ currentTime }}</span>
           <!-- <v-divider vertical style="color: #fff"></v-divider>
           <span style="font-size: 30px; color: #fff">{{
