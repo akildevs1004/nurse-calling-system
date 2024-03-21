@@ -154,7 +154,7 @@ class ApiAlarmControlController extends Controller
                         //   return [$datetime1, $datetime2];
                         $interval = $datetime1->diff($datetime2);
                         $secondsDifference = $interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400);
-                        if ($secondsDifference <= 50) {
+                        if ($secondsDifference <= 30) {
                             $logs = null;
                         }
                     }
@@ -254,11 +254,11 @@ class ApiAlarmControlController extends Controller
                     "alarm_end_datetime" => null
                 ];
 
-                Device::where("serial_number", $logs['serial_number'])->update($data);
-
                 if ($device['alarm_status'] == 0) {
                     $this->SendWhatsappNotification($device['name'] . " - Alarm Started ",   $device['name'],  $device, $logs['log_time'], true);
                 }
+
+                Device::where("serial_number", $logs['serial_number'])->update($data);
             }
         }
     }
