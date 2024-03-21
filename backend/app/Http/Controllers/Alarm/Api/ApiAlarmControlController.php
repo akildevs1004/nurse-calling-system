@@ -236,8 +236,8 @@ class ApiAlarmControlController extends Controller
                     ->first();
                 if (isset($logs['log_time'])) {
 
-
-                    $datetime1 = new DateTime(date("Y-m-d H:i:s"));
+                    $datetimeC = date("Y-m-d H:i:s");
+                    $datetime1 = new DateTime($datetimeC);
                     $datetime2 = new DateTime($logs['log_time']);
                     //   return [$datetime1, $datetime2];
                     $interval = $datetime1->diff($datetime2);
@@ -250,7 +250,7 @@ class ApiAlarmControlController extends Controller
                             ->orderBy("alarm_start_datetime", "DESC")
                             ->first();
 
-                        $datetime1 = new DateTime(date("Y-m-d H:i:s"));
+                        $datetime1 = new DateTime($datetimeC);
                         $datetime2 = new DateTime($alarmData["alarm_start_datetime"]);
 
                         $interval = $datetime1->diff($datetime2);
@@ -259,10 +259,12 @@ class ApiAlarmControlController extends Controller
 
                         DevicesAlarmLogs::where("id", $alarmData['id'])
                             ->update([
-                                "alarm_end_datetime" => date("Y-m-d H:i:s"),
+                                "alarm_end_datetime" => $datetimeC,
                                 "response_minutes" => $minutesDifference
                             ]);
-                        Device::where("serial_number", $device['serial_number'])->update(["alarm_status" => 0, "alarm_end_datetime" => date("Y-m-d H:i:s")]);
+                        Device::where("serial_number", $device['serial_number'])->update(["alarm_status" => 0, "alarm_end_datetime" => $datetimeC]);
+
+                        $this->SendWhatsappNotification($device['name'] . " - Alarm Cloed ",   $device['name'],  $device, $datetimeC, true);
                     }
                 }
             }
