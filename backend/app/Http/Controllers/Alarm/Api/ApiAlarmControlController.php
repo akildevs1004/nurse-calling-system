@@ -71,6 +71,7 @@ class ApiAlarmControlController extends Controller
 
         //  $devicesList = Device::where("serial_number", "24000003")->get();
         $log[] = $this->updateDuration($devicesList);
+        $log[] =   $this->updateAlarmEndDatetime($devicesList);
         $log[] = $this->updateAlarmStartDatetime($devicesList);
         $log[] =   $this->updateAlarmEndDatetime($devicesList);
 
@@ -136,7 +137,7 @@ class ApiAlarmControlController extends Controller
                         //   return [$datetime1, $datetime2];
                         $interval = $datetime1->diff($datetime2);
                         $secondsDifference = $interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400);
-                        if ($secondsDifference <= 30) {
+                        if ($secondsDifference <= 60) {
                             $logs = null;
                         }
                     }
