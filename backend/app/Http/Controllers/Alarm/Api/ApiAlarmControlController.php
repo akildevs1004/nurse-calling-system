@@ -265,7 +265,7 @@ class ApiAlarmControlController extends Controller
                         }
                         Device::where("serial_number", $device['serial_number'])->update(["alarm_status" => 0, "alarm_end_datetime" => $datetimeC]);
 
-                        $this->SendWhatsappNotification($device['name'] . " - Alarm Cloed ",   $device['name'],  $device, $datetimeC, true);
+                        $this->SendWhatsappNotification($device['name'] . " - Alarm Stopped ",   $device['name'],  $device, $datetimeC, true);
                     }
                 }
             }
