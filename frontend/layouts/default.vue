@@ -1319,23 +1319,23 @@ export default {
       };
       //this.pendingNotificationsCount = 0;
       let pendingcount = 0;
-      if (this.intervalId) clearInterval(this.intervalId);
+      //if (this.intervalId) clearInterval(this.intervalId);
       this.$axios.get(`get_notifications_alarm`, options).then(({ data }) => {
         if (data.length > 0) {
           if (this.intervalId) clearInterval(this.intervalId);
 
-          setTimeout(() => {
-            this.intervalId = setInterval(() => {
-              data.forEach((device) => {
-                try {
-                  device.timeResponseDuration = this.getMinuteSecondsDifference(
-                    device.alarm_start_datetime
-                  );
-                } catch (e) {}
-              });
-              this.notificationAlarmDevices = data;
-            }, 1000);
-          }, 1000);
+          //setTimeout(() => {
+          this.intervalId = setInterval(() => {
+            data.forEach((device) => {
+              try {
+                device.timeResponseDuration = this.getMinuteSecondsDifference(
+                  device.alarm_start_datetime
+                );
+              } catch (e) {}
+            });
+            this.notificationAlarmDevices = data;
+          }, 400);
+          //}, 100);
 
           this.alarmNotificationStatus = true;
           this.palysound();
@@ -1343,6 +1343,7 @@ export default {
           this.alarmNotificationStatus = false;
           this.notificationAlarmDevices = {};
           this.stopsound();
+          if (this.intervalId) clearInterval(this.intervalId);
         }
       });
     },
