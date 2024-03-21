@@ -832,6 +832,7 @@ export default {
       selectedBranchName: "All Branches",
       seelctedBranchId: "",
       branch_id: "",
+      intervalId: null,
       menuProperties: {
         dashboard: {
           elevation: 0,
@@ -982,6 +983,7 @@ export default {
     }, 1000 * 10);
 
     setInterval(() => {
+      clearInterval(this.intervalId);
       this.verifyAlarmStatus();
     }, 1000 * 10 * 1);
     setInterval(() => {
@@ -1319,7 +1321,7 @@ export default {
 
       this.$axios.get(`get_notifications_alarm`, options).then(({ data }) => {
         if (data.length > 0) {
-          setInterval(() => {
+          this.intervalId = setInterval(() => {
             data.forEach((device) => {
               try {
                 device.timeResponseDuration = this.getMinuteSecondsDifference(
