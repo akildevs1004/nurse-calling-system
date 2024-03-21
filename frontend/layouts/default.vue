@@ -630,9 +630,7 @@
                           width: 150px;
                         "
                       >
-                        {{
-                          getHourMinuteDifference(device.alarm_start_datetime)
-                        }}
+                        {{ device.timeResponseDuration ?? "---" }}
                       </div>
                     </div>
                   </div>
@@ -980,12 +978,12 @@ export default {
 
     setTimeout(() => {
       this.loadNotificationMenu();
-      this.verifyAlarmStatus();
+      //this.verifyAlarmStatus();
     }, 1000 * 10);
 
     setInterval(() => {
       this.verifyAlarmStatus();
-    }, 1000 * 30 * 1);
+    }, 1000 * 5 * 1);
     setInterval(() => {
       this.loadNotificationMenu();
     }, 1000 * 60 * 2);
@@ -1320,7 +1318,16 @@ export default {
       let pendingcount = 0;
       this.$axios.get(`get_notifications_alarm`, options).then(({ data }) => {
         if (data.length > 0) {
-          this.notificationAlarmDevices = data;
+          setInterval(() => {
+            data.forEach((device) => {
+              try {
+                device.timeResponseDuration = this.getMinuteSecondsDifference(
+                  device.alarm_start_datetime
+                );
+              } catch (e) {}
+            });
+            this.notificationAlarmDevices = data;
+          }, 1000);
 
           this.alarmNotificationStatus = true;
           this.palysound();
@@ -1524,7 +1531,24 @@ export default {
           }
         });
     },
+    getMinuteSecondsDifference(date1) {
+      // Parse the date strings into Date objects
+      const startDate = new Date(date1);
+      const endDate = new Date();
 
+      // Calculate the difference in milliseconds
+      const timeDiff = endDate.getTime() - startDate.getTime();
+
+      // Convert milliseconds to minutes and seconds
+      const minutes = Math.floor(timeDiff / (1000 * 60));
+      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+      // Format minutes and seconds
+      const formattedMinutes = String(minutes).padStart(2, "0");
+      const formattedSeconds = String(seconds).padStart(2, "0");
+
+      return `${formattedMinutes}:${formattedSeconds}`;
+    },
     getHourMinuteDifference(date1) {
       date1 = new Date(date1);
 
