@@ -897,7 +897,7 @@ export default {
           selected: "",
         },
       },
-      currentTime: "",
+      currentTime: "00:00:00",
       topMenu_Selected: "dashboard",
       company_menus,
       employee_menus,

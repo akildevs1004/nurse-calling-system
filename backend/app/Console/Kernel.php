@@ -25,12 +25,12 @@ class Kernel extends ConsoleKernel
         $monthYear = date("M-Y");
 
 
-        $schedule
-            ->command('task:alarm_update_company_ids')
-            // ->everyThirtyMinutes()
-            ->everyMinute()
-            //->withoutOverlapping()
-            ->appendOutputTo(storage_path("logs/fire-alarm-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+        // $schedule
+        //     ->command('task:alarm_update_company_ids')
+        //     // ->everyThirtyMinutes()
+        //     ->everyMinute()
+        //     //->withoutOverlapping()
+        //     ->appendOutputTo(storage_path("logs/fire-alarm-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
 
 
         $schedule

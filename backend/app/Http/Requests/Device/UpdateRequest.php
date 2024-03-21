@@ -44,6 +44,7 @@ class UpdateRequest extends FormRequest
             'category_id' => 'required',
 
 
+
         ];
     }
 }

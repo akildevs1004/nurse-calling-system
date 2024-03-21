@@ -39,9 +39,9 @@ class AlarmEvents extends Command
     {
 
 
-        echo (new ApiAlarmControlController)->updateAlarmResponseTime();
-        echo (new ApiAlarmControlController)->updateAlarmResponseTime();
-        echo (new ApiAlarmControlController)->updateAlarmResponseTime();
-        echo (new ApiAlarmControlController)->updateAlarmResponseTime();
+        echo json_encode((new ApiAlarmControlController)->updateAlarmResponseTime());
+        echo json_encode((new ApiAlarmControlController)->updateAlarmResponseTime());
+        echo json_encode((new ApiAlarmControlController)->updateAlarmResponseTime());
+        echo json_encode((new ApiAlarmControlController)->updateAlarmResponseTime());
     }
 }

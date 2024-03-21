@@ -64,6 +64,9 @@ class StoreRequest extends FormRequest
             'category_id' => 'required',
 
 
+
+
+
         ];
     }
 }

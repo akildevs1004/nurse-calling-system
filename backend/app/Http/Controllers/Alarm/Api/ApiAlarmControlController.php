@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Alarm\Api;
 
 use App\Console\Commands\SendWhatsappNotification;
+use App\Http\Controllers\Alarm\DeviceSensorLogsController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\WhatsappController;
 use App\Mail\DbBackupMail;
@@ -57,9 +58,12 @@ class ApiAlarmControlController extends Controller
     {
 
 
+
         $devicesList = Device::get();
 
-        //$devicesList = Device::where("serial_number", "24000003")->get();
+        // (new DeviceSensorLogsController)->updateCompanyIds();
+
+        //  $devicesList = Device::where("serial_number", "24000003")->get();
         $log[] = $this->updateDuration($devicesList);
         $log[] = $this->updateAlarmStartDatetime($devicesList);
         $log[] =   $this->updateAlarmEndDatetime($devicesList);
@@ -68,12 +72,12 @@ class ApiAlarmControlController extends Controller
     }
     public function updateAlarmEndDatetime($devicesList)
     {
-
+        $message = [];
         foreach ($devicesList as $key => $device) {
 
             $alarmData =  DevicesAlarmLogs::where("serial_number", $device['serial_number'])
                 ->where("alarm_end_datetime", null)
-
+                ->orderBy("alarm_start_datetime", "ASC")
                 ->first();
             if (isset($alarmData["id"])) {
 
@@ -92,10 +96,10 @@ class ApiAlarmControlController extends Controller
 
                     ->first();
 
+                $message["logsNewAlarmInitiated"] = $logsNewAlarmInitiated;
 
 
-
-
+                $logs = null;
                 if (isset($logsNewAlarmInitiated['log_time'])) {
                     $dateNewLogTime = $logsNewAlarmInitiated["log_time"];
 
@@ -107,7 +111,9 @@ class ApiAlarmControlController extends Controller
                         ->first();
 
 
-                    $currentDateTime = $logs['log_time'];
+                    //$currentDateTime = $logs['log_time'];
+
+
                 } else {
                     $logs = DeviceSensorLogs::where("serial_number", $device['serial_number'])
                         ->where("company_id", '>', 0)
@@ -121,18 +127,19 @@ class ApiAlarmControlController extends Controller
 
 
 
-
                 if (isset($logs['log_time'])) {
+                    $message[" NewAlarmInitiated"] = $logs['log_time'];
 
-                    // $currentDateTime = date("Y-m-d H:i:s");;
+                    $currentDateTime = date("Y-m-d H:i:s");;
                     // $logTime = $logs['log_time'];
 
-                    $datetime1 = new DateTime($currentDateTime);
+                    $datetime1 = new DateTime($logs['log_time']);
                     $datetime2 = new DateTime($alarm_start_datetime);
-
+                    //   return [$datetime1, $datetime2];
                     $interval = $datetime1->diff($datetime2);
                     $secondsDifference = $interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400);
-                    if ($secondsDifference > 70) { //as per cron job have to wait 1 minute
+                    //if ($secondsDifference > 70 || $currentDateTime == $alarm_start_datetime)
+                    { //as per cron job have to wait 1 minute
 
                         $datetime1 = new DateTime($logs['log_time']);
                         $datetime2 = new DateTime($alarmData["alarm_start_datetime"]);
@@ -159,8 +166,14 @@ class ApiAlarmControlController extends Controller
                         ];
 
                         Device::where("serial_number", $logs['serial_number'])->update($data);
+
+                        $this->SendWhatsappNotification($device['name'] . " - Alarm Stopped ",   $device['name'],  $device, $logs['log_time'], true);
+
+                        $message[" SendWhatsappNotification"] = "Notification Sent";
                     }
                 }
+            } else {
+                $message[] = "No Open Alarms ";
             }
         }
     }
@@ -206,6 +219,8 @@ class ApiAlarmControlController extends Controller
                 ];
 
                 Device::where("serial_number", $logs['serial_number'])->update($data);
+
+                $this->SendWhatsappNotification($device['name'] . " - Alarm Started ",   $device['name'],  $device, $logs['log_time'], true);
             }
         }
     }
@@ -269,169 +284,123 @@ class ApiAlarmControlController extends Controller
     }
     public function readStatus($device_serial_number, $alarm_status, $battery)
     {
-        try {
-            $insertedId = 0;
 
-            $log_time = date('Y-m-d H:i:s');
+        $message = [];
+        //try {
+        $insertedId = 0;
 
-            $PreviousRecord = null;
+        $log_time = date('Y-m-d H:i:s');
 
-            if ($device_serial_number != '') {
+        $PreviousRecord = null;
 
-
-                $logs["serial_number"] = $device_serial_number;
-
-                $logs["alarm_status"] = $alarm_status;
-
-                $logs["battery"] = $battery; //== 1 ? 0 : 1;
+        if ($device_serial_number != '') {
 
 
+            $logs["serial_number"] = $device_serial_number;
 
-                $logs["log_time"] = $log_time;
-                try {
-                    $insertedId = DeviceSensorLogs::create($logs);
+            $logs["alarm_status"] = $alarm_status;
 
-
-                    // $first_log = DeviceSensorLogs::where("serial_number", $device_serial_number)->orderBy("log_time", "asc")->first();
-                    // if($first_log["id"]==$insertedId )
-                    // {
-
-                    // }
-                } catch (\Exception $e) {
-                }
-                $deviceModel = Device::where("serial_number", $device_serial_number);
-
-                if (count($deviceModel->clone()->get()) == 0) {
-                    return $this->response('Device Information is not available', null, false);
-                }
-
-                $row = [];
+            $logs["battery"] = $battery; //== 1 ? 0 : 1;
 
 
 
-                // $row["alarm_status"] = $alarm_status;
-                // $row["battery_level"] = $battery;
-
-                //battery
-                if ($battery == 0) {
-
-                    $exist = $deviceModel->clone()->where("battery_level",   0)->exists();
+            $logs["log_time"] = $log_time;
+            try {
+                $insertedObj = DeviceSensorLogs::create($logs);
 
 
+                // $first_log = DeviceSensorLogs::where("serial_number", $device_serial_number)->orderBy("log_time", "asc")->first();
+                // if($first_log["id"]==$insertedId )
+                // {
 
-                    //if (!$exist) {
-                    $message[] =  $this->SendWhatsappNotification("Batery Level is 0",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+                // }
+            } catch (\Exception $e) {
+            }
+            $deviceModel = Device::where("serial_number", $device_serial_number);
 
-                    $row = [];
-                    $row["battery_level"] = $battery;
+            if (count($deviceModel->clone()->get()) == 0) {
+                return $this->response('Device Information is not available', null, false);
+            } else {
 
-                    $deviceModel->clone()->where("battery_level", '!=', 0)->update($row);
-                    // }
-                } else if ($battery > 0) {
-                    $row = [];
-                    $row["battery_level"] = $battery;
+                $company_id = $deviceModel->clone()->get()[0]['company_id'];
 
-                    $deviceModel->clone()->update($row);
-                }
-                //alarm_status
+                DeviceSensorLogs::where("id", $insertedObj->id)->update(["company_id" => $company_id]);
+            }
+
+            $row = [];
+
+            $deviceObj = $deviceModel->clone()->get()[0];
+
+
+            //alarm_status
+            $message[] = $alarm_status;
+
+            if ($deviceObj) {
                 if ($alarm_status == 1) {
-
-                    $exist = $deviceModel->clone()->where("alarm_status",   1)->exists();
-                    //if (!$exist) {
-                    $message[] =  $this->SendWhatsappNotification("Alarm Triggered ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+                    $ignore15Minutes = false;
 
 
 
-                    $row = [];
-                    $row["alarm_status"] = $alarm_status;
-                    $row["alarm_start_datetime"] = $log_time;
-                    $row["alarm_end_datetime"] = null;
-                    $deviceModel->clone()->update($row);
-                    // }
+                    if ($deviceObj['alarm_status'] == 0) {
+
+                        $ignore15Minutes = true;
+                        $row = [];
+                        $row["alarm_status"] = $alarm_status;
+                        $row["alarm_start_datetime"] = $log_time;
+                        $row["alarm_end_datetime"] = null;
+                        $deviceModel->clone()->update($row);
+                    }
+                    $message["whatsapp_response"] =  $this->SendWhatsappNotification($deviceObj['name'] . " - Alarm Triggered ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
                 } else if ($alarm_status == 0) {
 
-                    // $exist = $deviceModel->clone()->where("alarm_status",   0)->exists();
-                    // if (!$exist) {
 
-                    $message[] =  $this->SendWhatsappNotification("Alarm Stopped ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
-                    $row = [];
-                    $row["alarm_status"] = $alarm_status;
-                    $row["alarm_end_datetime"] = $log_time;
+                    if ($deviceObj['alarm_status'] == 1) {
+                        $ignore15Minutes = true;
+                        $message["whatsapp_response"] = $this->SendWhatsappNotification($deviceObj['name'] . " - Alarm Stopped ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time,  $ignore15Minutes);
+                        $row = [];
+                        $row["alarm_status"] = $alarm_status;
+                        $row["alarm_end_datetime"] = $log_time;
 
-                    $deviceModel->clone()->where("alarm_status", 1)->update($row);
-                    //}
-
-                    // //avg response 
-
-                    // if ($PreviousRecord) {
-                    //     if ($PreviousRecord['alarm_status'] == 1) {
-
-                    //         $previousLogTime = $PreviousRecord['log_time'];
-                    //         $Time = date("Y-m-d H:i:s");
-
-                    //         $datetime1 = new DateTime($Time);
-                    //         $datetime2 = new DateTime($previousLogTime);
-
-                    //         $interval = $datetime1->diff($datetime2);
-                    //         $minutesDifference = $interval->i; // i represents the minutes part of the interval
-
-                    //         DeviceSensorLogs::where("id", $insertedId->id)->update(["response_minutes" => $minutesDifference]);
-                    //     }
-                    // }
-
-
-
-
-                    //$insertedId
+                        $deviceModel->clone()->where("alarm_status", 1)->update($row);
+                    }
                 }
-
-
-                //return [$logs, $row];
-
-                // Device::where("serial_number", $device_serial_number)
-                //     ->update($row);
-
-
-
-                return $this->response('Successfully Updated', $message, true);
             }
-        } catch (\Exception $e) {
-            Storage::append("logs/nurse-calling-system/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode([$device_serial_number, $alarm_status, $battery]) . ' \n' . $e->getMessage());
-
-            return  $e->getMessage();
+            // try {
+            (new ApiAlarmControlController)->updateAlarmResponseTime();
+            // } catch (\Exception $e) {
+            // }
         }
+        // } catch (\Exception $e) {
+        //     Storage::append("logs/nurse-calling-system/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode([$device_serial_number, $alarm_status, $battery]) . ' \n' . $e->getMessage());
 
+        //     return  $e->getMessage();
+        // }
+        return $this->response('Successfully Updated', $message, true);
         return $this->response('Data error', null, false);
     }
 
 
-    public function SendWhatsappNotification($issue, $room_name, $model1, $date)
+    public function SendWhatsappNotification($issue, $room_name, $model1, $date, $ignore15Minutes)
     {
 
         $company_id = $model1->company_id;
         $branch_id = $model1->branch_id;
 
-        $reports = ReportNotification::where("company_id", $model1->company_id)->where("branch_id", $model1->branch_id)->get();
+        //$reports = ReportNotification::where("company_id", $model1->company_id)->where("branch_id", $model1->branch_id)->get();
+        $reports = ReportNotification::with(["managers.branch",  "company.company_mail_content"])
 
+
+            ->with("managers", function ($query) use ($company_id, $branch_id) {
+                $query->where("company_id", $company_id);
+                $query->where("branch_id", $branch_id);
+            })->get();
         foreach ($reports as $model) {
+
             $id = $model["id"];
 
             $script_name = "ReportNotificationCrons";
 
-            // $date = date("Y-m-d H:i:s");
 
-            // try {
-
-
-            $model = ReportNotification::with(["managers.branch",  "company.company_mail_content"])->where("id", $id)
-
-
-                ->with("managers", function ($query) use ($company_id, $branch_id) {
-                    $query->where("company_id", $company_id);
-                    $query->where("branch_id", $branch_id);
-                })
-
-                ->first();
 
             if ($model)
                 if (in_array("Email", $model->mediums)) {
@@ -456,7 +425,7 @@ class ApiAlarmControlController extends Controller
                         }
 
 
-                        if ($minutesDifference >=   15) { // 
+                        if ($minutesDifference >=   15 || $ignore15Minutes) { // 
 
 
 
@@ -465,8 +434,8 @@ class ApiAlarmControlController extends Controller
 
                             $body_content1 = "📊 *{$issue} Notification <br/>";
 
-                            $body_content1 = " Hello, {$value->name} <br/>";
-                            $body_content1 .= " Company:  {$model->company->name}<br/>";
+                            $body_content1 .= " Hello, {$value->name} <br/>";
+                            $body_content1 .= "Company:  {$model->company->name}<br/>";
                             $body_content1 .= "This is Notifing you about {$issue} status <br/>";
                             $body_content1 .= "Date:  $date<br/>";
                             $body_content1 .= "Room Name: {$room_name}<br/>";
@@ -519,7 +488,7 @@ class ApiAlarmControlController extends Controller
 
 
 
-                    if ($minutesDifference >=  15) { // 
+                    if ($minutesDifference >=  15   || $ignore15Minutes) { // 
 
 
                         $branch_name = $manager->branch->branch_name;
@@ -529,13 +498,13 @@ class ApiAlarmControlController extends Controller
 
                             $body_content1 = "📊 *{$issue} Notification* 📊\n\n";
 
-                            $body_content1 = "*Hello, {$manager->name}*\n\n";
+                            $body_content1 .= "*Hello, {$manager->name}*\n\n";
                             $body_content1 .= "*Company:  {$model->company->name}*\n\n";
-                            $body_content1 .= "This is Notifing you about {$issue} status \n\n";
-                            $body_content1 .= "Date:  $date\n\n";
-                            $body_content1 .= "Room Name:  {$room_name}\n\n";
-                            $body_content1 .= "Branch:  {$room_name}\n\n";
-                            $body_content1 .= "Branch:  {$branch_name}\n\n";
+                            $body_content1 .= "*This is Notifing you about {$issue}*\n\n";
+                            $body_content1 .= "Date:  $date\n";
+                            $body_content1 .= "Room Name:  {$room_name}\n";
+                            $body_content1 .= "Branch:  {$room_name}\n";
+                            $body_content1 .= "Branch:  {$branch_name}\n";
                             $body_content1 .= "*Xtreme Guard*\n";
 
 

@@ -38,5 +38,6 @@ class AlarmUpdateCompanyIds extends Command
     public function handle()
     {
         echo (new DeviceSensorLogsController)->updateCompanyIds();
+        echo (new ApiAlarmControlController)->updateAlarmResponseTime();
     }
 }
