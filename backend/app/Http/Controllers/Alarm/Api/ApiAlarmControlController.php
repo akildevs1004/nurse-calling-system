@@ -288,7 +288,7 @@ class ApiAlarmControlController extends Controller
                 ->where(function ($query) use ($key) {
                     $query->where("time_gap_seconds",  null);
 
-                    $query->Orwhere("time_gap_seconds", '>=', 10);
+                    $query->Orwhere("time_gap_seconds", '>=', 30);
                 })
 
                 ->orderBy("log_time", "ASC")
