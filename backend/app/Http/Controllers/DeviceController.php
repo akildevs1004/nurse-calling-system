@@ -44,7 +44,7 @@ class DeviceController extends Controller
     public function DevicesListMonitor()
     {
 
-        (new ApiAlarmControlController)->updateAlarmResponseTime();
+        // (new ApiAlarmControlController)->updateAlarmResponseTime();
 
 
         $model = Device::with(['category']);
