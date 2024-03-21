@@ -122,6 +122,15 @@ class ApiAlarmControlController extends Controller
                         ->where("log_time", '>',  $alarmData['alarm_start_datetime'])
                         ->orderBy("log_time", "DESC")
                         ->first();
+
+                    $datetime1 = new DateTime(date("Y-m-d H:i:s"));
+                    $datetime2 = new DateTime($logs['log_time']);
+                    //   return [$datetime1, $datetime2];
+                    $interval = $datetime1->diff($datetime2);
+                    $secondsDifference = $interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400);
+                    if ($secondsDifference <= 70) {
+                        $logs = null;
+                    }
                 }
 
 
@@ -173,7 +182,7 @@ class ApiAlarmControlController extends Controller
                     }
                 }
             } else {
-                $message[] = "No Open Alarms ";
+                $message[] = "No Log found to close alarm  ";
             }
         }
     }
