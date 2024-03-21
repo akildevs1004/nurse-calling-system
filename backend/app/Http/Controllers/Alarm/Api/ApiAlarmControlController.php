@@ -101,7 +101,7 @@ class ApiAlarmControlController extends Controller
 
 
 
-            $message[] = $this->stopOldAlarms($device);
+
 
 
             $alarmData =  DevicesAlarmLogs::where("serial_number", $device['serial_number'])
@@ -327,11 +327,11 @@ class ApiAlarmControlController extends Controller
     public function updateDuration($devicesList)
     {
 
-
+        $message = [];
 
         foreach ($devicesList as $key => $device) {
 
-
+            $message[] = $this->stopOldAlarms($device);
             $data = DeviceSensorLogs::where("serial_number", $device['serial_number'])
                 ->where("time_gap_seconds", null)
                 ->where("company_id", '>', 0)
@@ -381,6 +381,8 @@ class ApiAlarmControlController extends Controller
                 }
             }
         }
+
+        return  $message;
     }
     public function readStatus($device_serial_number, $alarm_status, $battery)
     {

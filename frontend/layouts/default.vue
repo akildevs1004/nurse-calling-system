@@ -984,7 +984,7 @@ export default {
     // }, 1000 * 10);
 
     setInterval(() => {
-      clearInterval(this.intervalId);
+      if (this.intervalId) clearInterval(this.intervalId);
       this.verifyAlarmStatus();
     }, 1000 * 5 * 1);
     // setInterval(() => {
@@ -1319,19 +1319,22 @@ export default {
       };
       //this.pendingNotificationsCount = 0;
       let pendingcount = 0;
-
+      if (this.intervalId) clearInterval(this.intervalId);
       this.$axios.get(`get_notifications_alarm`, options).then(({ data }) => {
         if (data.length > 0) {
-          clearInterval(this.intervalId);
-          this.intervalId = setInterval(() => {
-            data.forEach((device) => {
-              try {
-                device.timeResponseDuration = this.getMinuteSecondsDifference(
-                  device.alarm_start_datetime
-                );
-              } catch (e) {}
-            });
-            this.notificationAlarmDevices = data;
+          if (this.intervalId) clearInterval(this.intervalId);
+
+          setTimeout(() => {
+            this.intervalId = setInterval(() => {
+              data.forEach((device) => {
+                try {
+                  device.timeResponseDuration = this.getMinuteSecondsDifference(
+                    device.alarm_start_datetime
+                  );
+                } catch (e) {}
+              });
+              this.notificationAlarmDevices = data;
+            }, 1000);
           }, 1000);
 
           this.alarmNotificationStatus = true;
