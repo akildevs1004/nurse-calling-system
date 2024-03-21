@@ -653,6 +653,8 @@ class DeviceController extends Controller
 
     public function getAlarmNotification(Request $request)
     {
+        (new ApiAlarmControlController)->updateAlarmResponseTime();
+
         //return  $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id)->where("alarm_status", 1)->get();
         return  $model = $devices = Device::with(["branch",  "category"])->where("company_id", $request->company_id)->where("alarm_status", 1)
 

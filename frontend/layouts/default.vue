@@ -948,6 +948,7 @@ export default {
     };
   },
   created() {
+    this.verifyAlarmStatus();
     //console.log("this.$route.name", this.$route.name);
     if (this.$route.name != "monitor-id") this.displayDeviceCategories = false;
 
@@ -985,7 +986,7 @@ export default {
     setInterval(() => {
       clearInterval(this.intervalId);
       this.verifyAlarmStatus();
-    }, 1000 * 10 * 1);
+    }, 1000 * 8 * 1);
     // setInterval(() => {
     //   this.loadNotificationMenu();
     // }, 1000 * 60 * 2);
