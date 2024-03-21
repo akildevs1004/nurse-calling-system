@@ -977,18 +977,18 @@ export default {
     //   this.palysound();
     // }, 5000);
 
-    setTimeout(() => {
-      this.loadNotificationMenu();
-      //this.verifyAlarmStatus();
-    }, 1000 * 10);
+    // setTimeout(() => {
+    //   this.loadNotificationMenu();
+    //   //this.verifyAlarmStatus();
+    // }, 1000 * 10);
 
     setInterval(() => {
       clearInterval(this.intervalId);
       this.verifyAlarmStatus();
     }, 1000 * 10 * 1);
-    setInterval(() => {
-      this.loadNotificationMenu();
-    }, 1000 * 60 * 2);
+    // setInterval(() => {
+    //   this.loadNotificationMenu();
+    // }, 1000 * 60 * 2);
     //this.company_menus = [];
 
     let menu_name = this.$route.name;
