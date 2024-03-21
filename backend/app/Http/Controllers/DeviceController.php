@@ -646,10 +646,13 @@ class DeviceController extends Controller
     public function getAlarmNotification(Request $request)
     {
         //return  $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id)->where("alarm_status", 1)->get();
-        $model = $devices = Device::with(["branch", "zone", "category"])->where("company_id", $request->company_id);
-        return $model->where(function ($query) use ($request) {
-            $query->where("alarm_status", 1);
-        })->get();
+        return  $model = $devices = Device::with(["branch",  "category"])->where("company_id", $request->company_id)->where("alarm_status", 1)
+
+            ->orderBy("alarm_start_datetime", "asc")
+            ->get();
+        // return $model->where(function ($query) use ($request) {
+        //     $query->where("alarm_status", 1);
+        // })->get();
     }
     public function openDoorAlways(Request $request)
     {
