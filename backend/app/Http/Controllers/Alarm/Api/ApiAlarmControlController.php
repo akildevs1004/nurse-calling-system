@@ -29,6 +29,19 @@ use Illuminate\View\View;
 
 class ApiAlarmControlController extends Controller
 {
+
+    public function updateDeviceHealth(Request $request)
+    {
+        Storage::append("logs/nurse-calling-system-health/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
+
+        $serialNumber = '';
+        if ($request->filled("serialNumber")) {
+            $serialNumber = $request->serialNumber;
+
+
+            Device::where("serial_number", $serialNumber)->update(["status_id" => 1, "last_live_datetime" => date("Y-m-d H:i:s")]);
+        }
+    }
     public function LogDeviceStatus(Request $request)
     {
 
@@ -37,8 +50,12 @@ class ApiAlarmControlController extends Controller
         $switch1_status = -1;
         $battery = 100;
         Storage::append("logs/nurse-calling-system/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
+        if ($request->filled("serialNumber")) {
+            $device_serial_number = $request->serialNumber;
+        } else {
+            return false;
+        }
 
-        $device_serial_number = $request->serialNumber;
         if ($request->filled("alarm_status")) {
             $alarm_status = $request->alarm_status;
         }

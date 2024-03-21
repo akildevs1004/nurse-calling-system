@@ -47,7 +47,17 @@ class Kernel extends ConsoleKernel
 
         //     ->appendOutputTo(storage_path("logs/fire-alarm-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
 
+        try {
+            $schedule
+                ->command('task:check_device_health')
 
+                ->everyThirtyMinutes()
+
+                ->appendOutputTo(storage_path("logs/device-offline-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+
+
+        } catch (\Exception $e) {
+        }
 
         $schedule
             ->command('task:db_backup')
