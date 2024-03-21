@@ -33,6 +33,8 @@ class ApiAlarmControlController extends Controller
     {
 
         $alarm_status = -1;
+
+        $switch1_status = -1;
         $battery = 100;
         Storage::append("logs/nurse-calling-system/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
 
@@ -40,12 +42,16 @@ class ApiAlarmControlController extends Controller
         if ($request->filled("alarm_status")) {
             $alarm_status = $request->alarm_status;
         }
-
+        if ($request->filled("switch1_status")) {
+            $switch1_status = $request->switch1_status;
+        }
 
         if ($request->filled("battery")) {
             $battery = $request->battery;
         }
-
+        if ($switch1_status == 0) {
+            return false;
+        }
         $alarm_status = 1; //always 1 
 
         if ($device_serial_number != '')
