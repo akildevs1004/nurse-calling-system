@@ -231,7 +231,7 @@ export default {
 
     setInterval(() => {
       this.getDataFromApi();
-    }, 1000 * 30);
+    }, 1000 * 5);
     const now = new Date();
     console.log("reloadCount", now.toLocaleTimeString([], { hour12: false }));
     setTimeout(() => {

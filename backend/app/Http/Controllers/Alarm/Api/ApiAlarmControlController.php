@@ -154,7 +154,7 @@ class ApiAlarmControlController extends Controller
                         //   return [$datetime1, $datetime2];
                         $interval = $datetime1->diff($datetime2);
                         $secondsDifference = $interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400);
-                        if ($secondsDifference <= 60) {
+                        if ($secondsDifference <= 30) {
                             $logs = null;
                         }
                     }
@@ -256,7 +256,9 @@ class ApiAlarmControlController extends Controller
 
                 Device::where("serial_number", $logs['serial_number'])->update($data);
 
-                $this->SendWhatsappNotification($device['name'] . " - Alarm Started ",   $device['name'],  $device, $logs['log_time'], true);
+                if ($device['alarm_status'] == 0) {
+                    $this->SendWhatsappNotification($device['name'] . " - Alarm Started ",   $device['name'],  $device, $logs['log_time'], true);
+                }
             }
         }
     }
@@ -386,7 +388,7 @@ class ApiAlarmControlController extends Controller
                         $row["alarm_end_datetime"] = null;
                         $deviceModel->clone()->update($row);
                     }
-                    $message["whatsapp_response"] =  $this->SendWhatsappNotification($deviceObj['name'] . " - Alarm Triggered ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
+                    $message["whatsapp_response"] =  $this->SendWhatsappNotification($deviceObj['name'] . " - Alarm Started ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
                 } else if ($alarm_status == 0) {
 
 

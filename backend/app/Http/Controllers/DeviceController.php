@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Alarm\Api\ApiAlarmControlController;
 use App\Http\Requests\Device\StoreRequest;
 use App\Http\Requests\Device\UpdateRequest;
 use App\Mail\EmailNotificationForOfflineDevices;
@@ -42,12 +43,19 @@ class DeviceController extends Controller
     }
     public function DevicesListMonitor()
     {
+
+        (new ApiAlarmControlController)->updateAlarmResponseTime();
+
+
         $model = Device::with(['category']);
         $model->where('company_id', request('company_id'));
         $model->where("device_type", "!=", "Manual");
         $model->when(request()->filled('category_id'), fn ($q) => $q->where('category_id', request('category_id')));
         $model->when(request()->filled('branch_id'), fn ($q) => $q->where('branch_id', request('branch_id')));
         $model->orderBy(request('order_by') ?? "name", request('sort_by_desc') ? "desc" : "asc");
+
+
+
         return $model->get();
     }
 
