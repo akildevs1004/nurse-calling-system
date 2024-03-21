@@ -254,11 +254,13 @@ class ApiAlarmControlController extends Controller
                     "alarm_end_datetime" => null
                 ];
 
+
+
+                Device::where("serial_number", $logs['serial_number'])->update($data);
+
                 if ($device['alarm_status'] == 0) {
                     $this->SendWhatsappNotification($device['name'] . " - Alarm Started ",   $device['name'],  $device, $logs['log_time'], true);
                 }
-
-                Device::where("serial_number", $logs['serial_number'])->update($data);
             }
         }
     }
