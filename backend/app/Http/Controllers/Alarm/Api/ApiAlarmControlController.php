@@ -275,7 +275,7 @@ class ApiAlarmControlController extends Controller
             $data = DeviceSensorLogs::where("serial_number", $device['serial_number'])
                 ->where("time_gap_seconds", null)
                 ->where("company_id", '>', 0)
-                ->where("log_time", '<=',  date("Y-m-d H:i:s", strtotime("-30 seconds")))
+                ->where("log_time", '<=',  date("Y-m-d H:i:s", strtotime("-10 seconds")))
                 ->orderBy("log_time", "DESC")
                 ->get();
 
