@@ -99,6 +99,11 @@ class ApiAlarmControlController extends Controller
         $message = [];
         foreach ($devicesList as $key => $device) {
 
+
+
+            $message[] = $this->stopOldAlarms($device);
+
+
             $alarmData =  DevicesAlarmLogs::where("serial_number", $device['serial_number'])
                 ->where("alarm_end_datetime", null)
                 ->orderBy("alarm_start_datetime", "ASC")
@@ -205,12 +210,64 @@ class ApiAlarmControlController extends Controller
 
                         $this->SendWhatsappNotification($device['name'] . " - Alarm Stopped ",   $device['name'],  $device, $logs['log_time'], true);
 
-                        $message[" SendWhatsappNotification"] = "Notification Sent";
+                        $message[] = "Notification Sent";
                     }
                 }
             } else {
                 $message[] = "No Log found to close alarm  ";
             }
+        }
+
+        return $message;
+    }
+
+    public function stopOldAlarms($device)
+    {
+        try {
+
+
+
+            if ($device['alarm_status'] == 1) {
+
+                $logs = DeviceSensorLogs::where("serial_number", $device['serial_number'])
+                    ->where("company_id", '>', 0)
+
+                    ->orderBy("log_time", "DESC")
+                    ->first();
+                if (isset($logs['log_time'])) {
+
+
+                    $datetime1 = new DateTime(date("Y-m-d H:i:s"));
+                    $datetime2 = new DateTime($logs['log_time']);
+                    //   return [$datetime1, $datetime2];
+                    $interval = $datetime1->diff($datetime2);
+                    $secondsDifference = $interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400);
+                    if ($secondsDifference >= 60) {
+
+
+                        $alarmData =  DevicesAlarmLogs::where("serial_number", $device['serial_number'])
+                            ->where("alarm_end_datetime", null)
+                            ->orderBy("alarm_start_datetime", "DESC")
+                            ->first();
+
+                        $datetime1 = new DateTime(date("Y-m-d H:i:s"));
+                        $datetime2 = new DateTime($alarmData["alarm_start_datetime"]);
+
+                        $interval = $datetime1->diff($datetime2);
+
+                        $minutesDifference = $interval->i + ($interval->h * 60) + ($interval->days * 1440); // i represents the minutes part of the interval
+
+                        DevicesAlarmLogs::where("id", $alarmData['id'])
+                            ->update([
+                                "alarm_end_datetime" => date("Y-m-d H:i:s"),
+                                "response_minutes" => $minutesDifference
+                            ]);
+                        Device::where("serial_number", $device['serial_number'])->update(["alarm_status" => 0, "alarm_end_datetime" => date("Y-m-d H:i:s")]);
+                    }
+                }
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
     public function updateAlarmStartDatetime($devicesList)
