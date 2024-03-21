@@ -986,7 +986,7 @@ export default {
     setInterval(() => {
       clearInterval(this.intervalId);
       this.verifyAlarmStatus();
-    }, 1000 * 4 * 1);
+    }, 1000 * 5 * 1);
     // setInterval(() => {
     //   this.loadNotificationMenu();
     // }, 1000 * 60 * 2);
@@ -1322,6 +1322,7 @@ export default {
 
       this.$axios.get(`get_notifications_alarm`, options).then(({ data }) => {
         if (data.length > 0) {
+          clearInterval(this.intervalId);
           this.intervalId = setInterval(() => {
             data.forEach((device) => {
               try {
