@@ -536,7 +536,7 @@ class ApiAlarmControlController extends Controller
 
                             $body_content1 .= "*Hello, {$manager->name}*\n\n";
                             $body_content1 .= "*Company:  {$model->company->name}*\n\n";
-                            $body_content1 .= "*This is Notifing you about {$issue}*\n\n";
+                            $body_content1 .= "This is Notifing you about *{$issue}*\n\n";
                             $body_content1 .= "Date:  $date\n";
                             $body_content1 .= "Room Name:  {$room_name}\n";
                             $body_content1 .= "Branch:  {$room_name}\n";

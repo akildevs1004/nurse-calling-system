@@ -983,7 +983,7 @@ export default {
 
     setInterval(() => {
       this.verifyAlarmStatus();
-    }, 1000 * 5 * 1);
+    }, 1000 * 10 * 1);
     setInterval(() => {
       this.loadNotificationMenu();
     }, 1000 * 60 * 2);
@@ -1316,6 +1316,7 @@ export default {
       };
       //this.pendingNotificationsCount = 0;
       let pendingcount = 0;
+
       this.$axios.get(`get_notifications_alarm`, options).then(({ data }) => {
         if (data.length > 0) {
           setInterval(() => {
@@ -1333,7 +1334,7 @@ export default {
           this.palysound();
         } else {
           this.alarmNotificationStatus = false;
-
+          this.notificationAlarmDevices = {};
           this.stopsound();
         }
       });
