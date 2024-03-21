@@ -136,7 +136,7 @@ class ApiAlarmControlController extends Controller
                         //   return [$datetime1, $datetime2];
                         $interval = $datetime1->diff($datetime2);
                         $secondsDifference = $interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400);
-                        if ($secondsDifference <= 70) {
+                        if ($secondsDifference <= 20) {
                             $logs = null;
                         }
                     }
