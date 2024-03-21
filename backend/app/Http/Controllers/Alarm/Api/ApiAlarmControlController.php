@@ -154,7 +154,7 @@ class ApiAlarmControlController extends Controller
                         //   return [$datetime1, $datetime2];
                         $interval = $datetime1->diff($datetime2);
                         $secondsDifference = $interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400);
-                        if ($secondsDifference <= 30) {
+                        if ($secondsDifference <= 10) {
                             $logs = null;
                         }
                     }
@@ -275,7 +275,7 @@ class ApiAlarmControlController extends Controller
             $data = DeviceSensorLogs::where("serial_number", $device['serial_number'])
                 ->where("time_gap_seconds", null)
                 ->where("company_id", '>', 0)
-                ->where("log_time", '<=',  date("Y-m-d H:i:s", strtotime("-10 seconds")))
+                ->where("log_time", '<=',  date("Y-m-d H:i:s", strtotime("-5 seconds")))
                 ->orderBy("log_time", "DESC")
                 ->get();
 
