@@ -48,7 +48,7 @@ class ApiAlarmControlController extends Controller
         $alarm_status = -1;
 
         $switch1_status = -1;
-        $switch2_status = -1;
+        $alarm_off_status = -1;
 
         $battery = 100;
         Storage::append("logs/nurse-calling-system/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
@@ -57,27 +57,30 @@ class ApiAlarmControlController extends Controller
         } else {
             return false;
         }
+        $alarm_status = 1; //always 1 
+
 
         if ($request->filled("alarm_status")) {
             $alarm_status = $request->alarm_status;
         }
-        if ($request->filled("switch1_status")) {
-            $switch1_status = $request->switch1_status;
-        }
-        if ($request->filled("switch2_status")) {
-            $switch2_status = $request->switch2_status;
-        }
+        // if ($request->filled("switch1_status")) {
+        //     $switch1_status = $request->switch1_status;
+        // }
+        // if ($request->filled("alarm_off_status")) {
+        //     $alarm_off_status = $request->alarm_off_status;
+        // }
+        // if ($request->filled("alarm_on_status")) {
+        //     $alarm_status = $request->alarm_on_status;
+        // }
 
         if ($request->filled("battery")) {
             $battery = $request->battery;
         }
 
-        $alarm_status = 1; //always 1 
+        // if ($alarm_off_status == 1) {
 
-        if ($switch2_status == 0) {
-
-            $alarm_status = 0;
-        }
+        //     $alarm_status = 0;
+        // }
 
         if ($device_serial_number != '')
             return   $this->readStatus($device_serial_number, $alarm_status, $battery);

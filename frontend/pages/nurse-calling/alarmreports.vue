@@ -451,6 +451,7 @@ export default {
     },
 
     getDataFromApi(url = this.endpoint, filter_column = "", filter_value = "") {
+      if (!this.filter_from_date) return false;
       if (this.filterApplied) {
         this.currentPage = 1;
         this.options.page = 1;

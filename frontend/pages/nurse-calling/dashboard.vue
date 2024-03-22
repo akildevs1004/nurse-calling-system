@@ -318,8 +318,10 @@ export default {
     //this.adjustGraphHeight();
 
     setInterval(() => {
-      this.getDataFromApi();
-    }, 1000 * 30);
+      if (this.$route.name == "nurse-calling-dashboard") {
+        this.getDataFromApi();
+      }
+    }, 1000 * 6);
   },
   created() {
     // Get today's date
