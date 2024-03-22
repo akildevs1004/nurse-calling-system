@@ -48,6 +48,8 @@ class ApiAlarmControlController extends Controller
         $alarm_status = -1;
 
         $switch1_status = -1;
+        $switch2_status = -1;
+
         $battery = 100;
         Storage::append("logs/nurse-calling-system/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
         if ($request->filled("serialNumber")) {
@@ -62,14 +64,20 @@ class ApiAlarmControlController extends Controller
         if ($request->filled("switch1_status")) {
             $switch1_status = $request->switch1_status;
         }
+        if ($request->filled("switch2_status")) {
+            $switch2_status = $request->switch2_status;
+        }
 
         if ($request->filled("battery")) {
             $battery = $request->battery;
         }
-        if ($switch1_status == 0) {
-            return false;
-        }
+
         $alarm_status = 1; //always 1 
+
+        if ($switch2_status == 0) {
+
+            $alarm_status = 0;
+        }
 
         if ($device_serial_number != '')
             return   $this->readStatus($device_serial_number, $alarm_status, $battery);
@@ -451,6 +459,15 @@ class ApiAlarmControlController extends Controller
                         $row["alarm_start_datetime"] = $log_time;
                         $row["alarm_end_datetime"] = null;
                         $deviceModel->clone()->update($row);
+
+
+                        $data = [
+                            "company_id" => $company_id,
+                            "serial_number" => $device_serial_number,
+                            "alarm_start_datetime" => $log_time,
+                        ];
+
+                        DevicesAlarmLogs::create($data);
                     }
                     $message["whatsapp_response"] =  $this->SendWhatsappNotification($deviceObj['name'] . " - Alarm Started ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
                 } else if ($alarm_status == 0) {
@@ -464,11 +481,25 @@ class ApiAlarmControlController extends Controller
                         $row["alarm_end_datetime"] = $log_time;
 
                         $deviceModel->clone()->where("alarm_status", 1)->update($row);
+
+                        $recentAlaram = DevicesAlarmLogs::where("serial_number", $device_serial_number)->where("alarm_end_datetime", null)->orderBy("alarm_start_datetime", "desc")->first();
+                        if (isset($recentAlaram["id"])) {
+
+                            $datetime1 = new DateTime($log_time);
+                            $datetime2 = new DateTime($recentAlaram["alarm_start_datetime"]);
+
+                            $interval = $datetime1->diff($datetime2);
+
+                            $minutesDifference = $interval->i + ($interval->h * 60) + ($interval->days * 1440); // i represents the minutes part of the interval
+
+
+                            DevicesAlarmLogs::where("id", $recentAlaram["id"])->update(["alarm_end_datetime" => $log_time, "response_minutes" => $minutesDifference]);
+                        }
                     }
                 }
             }
             // try {
-            (new ApiAlarmControlController)->updateAlarmResponseTime();
+            //////////////////////// (new ApiAlarmControlController)->updateAlarmResponseTime();
             // } catch (\Exception $e) {
             // }
         }

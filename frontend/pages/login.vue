@@ -328,6 +328,7 @@ export default {
     },
   }),
   created() {
+    this.$auth.logout();
     // this.$store.commit("dashboard/resetState", null);
     this.$store.dispatch("dashboard/resetState");
     this.$store.dispatch("resetState");
