@@ -230,8 +230,11 @@ export default {
     // }, 1000);
 
     setInterval(() => {
-      this.getDataFromApi();
+      if (this.$route.name == "monitor-id") {
+        this.getDataFromApi();
+      }
     }, 1000 * 5);
+
     const now = new Date();
     console.log("reloadCount", now.toLocaleTimeString([], { hour12: false }));
     setTimeout(() => {

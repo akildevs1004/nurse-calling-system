@@ -986,7 +986,7 @@ export default {
     setInterval(() => {
       if (this.intervalId) clearInterval(this.intervalId);
       this.verifyAlarmStatus();
-    }, 1000 * 5 * 1);
+    }, 1000 * 2 * 1);
     // setInterval(() => {
     //   this.loadNotificationMenu();
     // }, 1000 * 60 * 2);
