@@ -478,7 +478,7 @@ class ApiAlarmControlController extends Controller
 
                     if ($deviceObj['alarm_status'] == 1) {
                         $ignore15Minutes = true;
-                        $message["whatsapp_response"] = $this->SendWhatsappNotification($deviceObj['name'] . " - Alarm Stopped ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time,  $ignore15Minutes);
+
                         $row = [];
                         $row["alarm_status"] = $alarm_status;
                         $row["alarm_end_datetime"] = $log_time;
@@ -498,6 +498,8 @@ class ApiAlarmControlController extends Controller
 
                             DevicesAlarmLogs::where("id", $recentAlaram["id"])->update(["alarm_end_datetime" => $log_time, "response_minutes" => $minutesDifference]);
                         }
+
+                        $message["whatsapp_response"] = $this->SendWhatsappNotification($deviceObj['name'] . " - Alarm Stopped ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time,  $ignore15Minutes);
                     }
                 }
             }
