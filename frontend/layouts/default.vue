@@ -548,7 +548,7 @@
                         />
                       </div>
                     </div>
-                    <div style="width: 40%">
+                    <div style="width: 160px">
                       <div
                         style="
                           float: left;
@@ -581,8 +581,8 @@
                         color: #fff;
                         font-weight: bold;
                         font-size: 46px;
-                        width: 180px;
-                        text-align: center;
+                        width: 340px;
+                        text-align: right;
                         padding-top: 14px;
                       "
                     >
