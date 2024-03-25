@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
 
                 ->everyThirtyMinutes()
 
-                ->appendOutputTo(storage_path("logs/device-offline-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+                ->appendOutputTo(storage_path("kernal_logs/device-offline-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
 
 
         } catch (\Exception $e) {
@@ -62,7 +62,7 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command('task:db_backup')
             ->dailyAt('6:00')
-            ->appendOutputTo(storage_path("logs/db_backup.log"))
+            ->appendOutputTo(storage_path("kernal_logs/db_backup.log"))
             ->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
     }
 
