@@ -281,6 +281,9 @@ class DeviceController extends Controller
             $q->Where('DeviceID', 'LIKE', "$key%");
         });
 
+
+        $model->Where('LogTime', '<=', date('Y-m-d 23:59:59'));
+
         if (!$request->sortBy) {
 
             $model->orderBy("LogTime", 'desc');
