@@ -190,30 +190,33 @@
       </span>
       <v-row v-if="displayDeviceCategories">
         <v-col style="" cols="12">
-          <v-bottom-navigation
-            :value="topMenu"
-            style="width: 80%; box-shadow: none; background: transparent"
-            elevation="0"
-          >
-            <v-btn
-              class="device-categories"
-              plain
-              :key="index"
-              @click="ChangeDevice(device.id)"
-              v-for="(device, index) in devicesCategoriesList"
-              style="
-                width: auto;
-                max-width: 100%;
-                height: 30px;
-                margin-top: 14px;
-              "
-              width="auto"
+          <v-slide-group multiple show-arrows>
+            <v-bottom-navigation
+              :value="topMenu"
+              style="width: 80%; box-shadow: none; background: transparent"
+              elevation="0"
             >
-              <span style="font-size: 20px; color: #fff; font-weight: normal">{{
-                device.name
-              }}</span>
-            </v-btn>
-          </v-bottom-navigation>
+              <v-btn
+                class="device-categories"
+                plain
+                :key="index"
+                @click="ChangeDevice(device.id)"
+                v-for="(device, index) in devicesCategoriesList"
+                style="
+                  width: auto;
+                  max-width: 100%;
+                  height: 30px;
+                  margin-top: 14px;
+                "
+                width="auto"
+              >
+                <span
+                  style="font-size: 20px; color: #fff; font-weight: normal"
+                  >{{ device.name }}</span
+                >
+              </v-btn>
+            </v-bottom-navigation>
+          </v-slide-group>
         </v-col>
       </v-row>
       <v-spacer></v-spacer>
@@ -974,9 +977,11 @@ export default {
   },
 
   mounted() {
-    // setTimeout(() => {
-    //   this.palysound();
-    // }, 5000);
+    setTimeout(() => {
+      this.audio = new Audio(
+        process.env.BACKEND_URL2 + "alarm_sounds/alarm-sound1.mp3"
+      );
+    }, 2000);
 
     // setTimeout(() => {
     //   this.loadNotificationMenu();
@@ -1074,7 +1079,7 @@ export default {
       return formattedDate;
     },
     changeColor() {
-      return "#04253b";
+      return "#04253b"; //background color
       return "#ecf0f4"; //this.$store.state.color;
     },
 
@@ -1160,9 +1165,6 @@ export default {
         });
     },
     palysound() {
-      this.audio = new Audio(
-        process.env.BACKEND_URL2 + "alarm_sounds/alarm-sound1.mp3"
-      );
       this.playAudioOnUserInteraction();
       // document.addEventListener("click", this.playAudioOnUserInteraction);
       // var elem = this.$refs.myBtn;
@@ -1171,10 +1173,20 @@ export default {
       //var prevented = elem.dispatchEvent(new Event("change")); // Fire event
     },
     playAudioOnUserInteraction() {
+      if (!this.audio) {
+        this.audio = new Audio(
+          process.env.BACKEND_URL2 + "alarm_sounds/alarm-sound1.mp3"
+        );
+      }
       this.audio.play();
     },
     stopsound() {
-      if (this.audio) this.audio.pause();
+      if (!this.audio) {
+        this.audio = new Audio(
+          process.env.BACKEND_URL2 + "alarm_sounds/alarm-sound1.mp3"
+        );
+      }
+      this.audio.pause();
     },
     toggleTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;

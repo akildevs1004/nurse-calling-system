@@ -51,7 +51,7 @@
         <v-col cols="5">Alarm Events count</v-col>
       </v-row>
       <div style="height: 160px; overflow-y: scroll; overflow-x: hidden">
-        <v-row v-for="(category, index) in categories">
+        <v-row :key="index" v-for="(category, index) in categories">
           <v-col cols="1">{{ index + 1 }}</v-col>
           <v-col cols="7"
             ><v-icon :color="options?.colors[index]">mdi mdi-square</v-icon
