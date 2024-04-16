@@ -60,7 +60,7 @@ class DevicesCategoriesController extends Controller
                 return $this->response('Device Category already exists.', null, true);
             }
 
-            $record = DevicesCategories::create(["name" =>  $name, "company_id" =>  $company_id]);
+            $record = DevicesCategories::create(["name" =>  $name, "company_id" =>  $request->company_id]);
 
             try {
                 if ($request->file_normal) {
